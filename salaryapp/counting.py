@@ -31,9 +31,9 @@ basicsalary = 25250
 
 #eventdata
 
-caseid = 0
-#eid
-year = '2022'
+caseid = 0      #if登入成功就 + 1
+#eid            
+year = '2022'   #if套用就就切換到當月
 month	= '10'
 
 

@@ -14,7 +14,7 @@ System requirement:
 @b員工調整窗被點擊會顯示該員工前6個月薪水明細跟當月明細，且可調整參數與查看所有該員工薪水紀錄
 -
 
-d設定列窗可以調整勞健保參數(調薪問題比例%)，新增刪除薪水計算項目，修改固定獎金等等項目
+d設定列窗可以調整勞健保參數(調薪問題   比例%)，新增刪除薪水計算項目，修改固定獎金等等項目
 -
 e試算窗可以查看該月總薪水及圖表顯示，可以調整為本月，近半年，全部
 -
@@ -29,62 +29,11 @@ b員工調整窗點擊當月薪資可以list出當月每天狀況且做修改並
 -
 薪資項目要求(正職本土，工讀):
 
+
+
 System design:
 
-使用Tkinter MVC設計架構作為GUI
-
-介面
-MainFrame主框:
-    tk.Frame
-    員工列窗info_view
-    員工調整窗editing_view
-    員工歷史薪資history_view
-    分析數據窗chart_view
-    
-    tk.Toplevel
-    員工設定窗setting_view
-    總試算窗check_view
-
-員工列窗info_view:
-    程式登入即顯示
-    Treeview顯示員工列表並顯示員工資訊(員工資料庫中)
-        員工資訊:員工編號，員工性質，姓名，當月薪水..by員工資料庫(該月)
-    
-    點擊員工event:投影該員工至員工調整窗且顯示該員工歷史記錄薪資
-
-員工調整窗editing_view:
-    當員工event被點擊則顯示
-    for調整該月薪水事宜並顯示編號姓名，有全勤套用button，取消全勤可以修改Entry內容
-    參數調整參照薪資要求設定，**代議
-
-員工歷史薪資history_view:
-    員工event被點擊時顯示
-    Treeview顯示員工近半年薪資明細(薪資條)(紀錄資料庫中)
-    當中顯示
-    
-    ----------
-    編號-姓名
-    明年，#default該年，去年，前年...(歷史年分event)
-
-    list
-    月份    顯示月淨薪資 與(明細event)
-    月份
-    月份    ....依此類推
-    ----------
-    
-    點擊明細event則顯示該員工以往薪資條(可列印之格式)(open word or Toplevel獨立視窗)
-    
-    點擊歷史年分event則顯示同視窗裡Treeview-list選擇之年分並投影chartview顯示該年薪資曲線
-    chart圖會在default該年就先顯示，點擊不同年分在轉換顯示。
-
-員工設定窗setting_view:
-    在工具列中顯示點擊即顯示(Toplevel)，
-
-總試算窗check_view:
-    在工具列中顯示點擊即顯示(Toplevel)，
-
-結算功能鍵
-
+----------------------操作邏輯
 
 原始手作邏輯算法:
 (全都無條件進位)
@@ -150,10 +99,50 @@ MainFrame主框:
 有借錢
 便當處理 
 責任獎金
-
 加班時數計算
 
+----------------------畫面view安排
+左一Treeview畫面    右 薪資數字調整
+左二員工基本設定     
 
+mainwidget
+
+widget
+員工資料總列窗show
+    每位員工基本資料顯示  "treeview"
+    薪水總金額數         "Label"
+widget
+員工資料調整窗basic_set
+    顯示該員工基本資料  "Label" "Line input"
+    修改鍵 完成鍵       "button"
+widget
+員工薪資設定窗account
+    顯示薪資條項目跟金額 "Label" "Line input"
+    新增按鍵 修改按鍵 刪除按鍵 預覽報表 "button"
+
+menubar
+
+widget
+基本參數設定窗value_set
+    顯示基本數據項 "label" "Line input"
+    修改鍵        "button
+widget
+員工歷史資料窗ehistory
+    選擇員工檢視   "combobox"
+    顯示該員工歷年薪水資料 "Treeview"
+    薪水細節    "widget"
+widget
+公司歷史資料窗chistory
+    ""暫定
+----------------------畫面事件邏輯
+
+
+
+
+
+
+
+----------------------資料庫
 
 (DB)
 1.
@@ -217,7 +206,6 @@ key編號
 國定加班
 其他+-
 
-ㄓ
 底薪:basicsalary.db
 
 ##每月員工每月訂製之底薪 方便結算時呼叫套用
