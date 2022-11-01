@@ -1,11 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class MainView(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self, modelx):
         super().__init__()
         self.setupUi(self)
+        self.modelx = modelx
         self.controller = None
-
+        
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1088, 835)
@@ -242,7 +243,7 @@ class MainView(QtWidgets.QMainWindow):
         self.undoview.setGeometry(QtCore.QRect(0, 0, 531, 231))
         self.undoview.setObjectName("undoview")
         self.doneview = QtWidgets.QListView(self.Show)
-        self.doneview.setGeometry(QtCore.QRect(0, 250, 531, 221))
+        self.doneview.setGeometry(QtCore.QRect(0, 250, 531, 231))
         self.doneview.setObjectName("doneview")
         self.Basic_set = QtWidgets.QWidget(self.centralwidget)
         self.Basic_set.setGeometry(QtCore.QRect(10, 550, 532, 259))
@@ -396,6 +397,20 @@ class MainView(QtWidgets.QMainWindow):
         self.menumain.setTitle(_translate("MainWindow", "視窗"))
         self.actionMain.setText(_translate("MainWindow", "setvalue"))
         self.actionehistory.setText(_translate("MainWindow", "ehistory"))
-        
-    def set_controller(self,controller):
+
+    def show_undoview(self):
+        #view禁止編輯
+        self.undoview.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.undoview.setModel(self.controller.model)
+    
+    def setcontroller(self, controller):
         self.controller = controller
+        #之後來判斷是哪個controller 來進行擴充設定
+        self.attachcontroller()
+
+    #依照該controller對應 設定其他按鍵事件連結
+    def attachcontroller(self):
+        self.pushButton_5.clicked.connect(self.controller.preview)
+        
+        self.controller.show_undoview()
+

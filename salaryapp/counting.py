@@ -22,16 +22,16 @@ overtime2 = 1/8/30*1.67
 
 # basicinfo
 
-eid = 'A01'
-eproperty = '工讀'
-ename	= 'yan'
-seniority = 0
+eid = 'A02'
+eproperty = '正職'
+ename	= 'andchange'
+seniority = 2
 specialdayoff = 8
 basicsalary = 25250
 
 #eventdata
 
-caseid = 0      #if登入成功就 + 1
+caseid = 1      #if登入成功就 + 1
 #eid            
 year = '2022'   #if套用就就切換到當月
 month	= '10'
@@ -44,7 +44,7 @@ month	= '10'
 # month
 normalmeals     = 21 * meal_value
 openbouns	    = openbouns_value * 0
-responsiblebouns= responsiblebouns_value * seniority//5
+responsiblebouns= responsiblebouns_value * (seniority//5)
 otherplus	    = 200
 workerfee	    = math.ceil(basicsalary * workerfee_rate)
 healthfee       = math.ceil(basicsalary * healthfee_rate)
