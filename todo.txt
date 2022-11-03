@@ -93,6 +93,8 @@ System design:
 
 事件狀況:
 
+
+
 月薪全勤 沒全勤
 時新工讀計算 
 有請假 
@@ -136,12 +138,30 @@ widget
     ""暫定
 ----------------------畫面事件邏輯
 
+mainviewy事件處理:
+    show_undoview:
+        列表undo listview 顯示還未登記薪資的員工
+        method:
+            basicinfo -> salarychecked = 0  (False 尚未新增該月該員工月薪)
 
-
-
-
-
-
+    undoview_clicked:
+        當undoview員工被點擊，跑對應數值到該line-edit上 可開始修改
+        mothod:
+            model:
+            undoview_clicked -> return basicinfo data
+            
+            view:
+            show data in edit_view and basicsalary grid and set 0 and set other line text default 0
+            
+            controller:
+            #if controller = this
+            call model.data (which mean get model.emit(signal or setString(listmodel)))
+            
+            model 負責信號 emit 跟資料
+            controller 透過view呼叫 model跟給model值
+            view button connect controller 丟值進去
+            model還可以connect其他物件透過信號顯示其他物件
+            
 ----------------------資料庫
 
 (DB)

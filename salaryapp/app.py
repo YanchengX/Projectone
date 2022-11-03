@@ -11,12 +11,10 @@ class App(QtWidgets.QApplication):
         super(App, self).__init__(sys_argv)
         
         self.model = Model()
-
-        self.main_view = MainView(self.model)
+        self.maincontroller = MainController(self.model)
+        self.main_view = MainView(self.model, self.maincontroller)
         self.main_view.show()
 
-        self.maincontroller = MainController(self.model, self.main_view)
-        self.main_view.setcontroller(self.maincontroller)
 if __name__ == "__main__":
 
     app = App(sys.argv)
