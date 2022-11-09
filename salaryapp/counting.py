@@ -183,6 +183,10 @@ laborpension = round(basicsalary * 0.06)
 # conn.execute("DELETE from eventdata WHERE eid = :eid", {'eid':eid})
 
 
+#update
+
+#conn.execute("UPDATE basicinfo SET basicsalary = 30000 WHERE eid='A02'")
+
 
 conn.commit()
 conn.close()

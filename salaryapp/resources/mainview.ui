@@ -87,7 +87,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>spectialdayoff</string>
+      <string/>
      </property>
     </widget>
     <widget class="QLineEdit" name="ename">
@@ -100,7 +100,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>ename</string>
+      <string/>
      </property>
     </widget>
     <widget class="QLabel" name="label">
@@ -194,7 +194,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>seniority</string>
+      <string/>
      </property>
     </widget>
     <widget class="QLineEdit" name="eid">
@@ -207,7 +207,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>eid</string>
+      <string/>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton">
@@ -246,7 +246,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>basicsalary</string>
+      <string/>
      </property>
     </widget>
     <widget class="QLineEdit" name="eproperty">
@@ -259,7 +259,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>eproperty</string>
+      <string/>
      </property>
     </widget>
    </widget>
@@ -275,9 +275,9 @@
     <widget class="QLabel" name="month">
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>20</y>
-       <width>111</width>
+       <x>10</x>
+       <y>50</y>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
@@ -290,13 +290,16 @@
      <property name="text">
       <string>month</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
     <widget class="QLabel" name="year">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>81</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
@@ -308,6 +311,9 @@
      </property>
      <property name="text">
       <string>year</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QLabel" name="label_9">
@@ -621,13 +627,13 @@
      <property name="font">
       <font>
        <family>Arial</family>
-       <pointsize>12</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
+       <pointsize>10</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="text">
-      <string>basicsalary</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="healthfee">
@@ -639,8 +645,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>healthfee</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="sundayovertime">
@@ -652,8 +663,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>sundayovertime</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="saturdayovertime_meals">
@@ -665,8 +681,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>saturdayovertime_meals</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="mealcall">
@@ -678,8 +699,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>mealcall</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="otherminus">
@@ -691,8 +717,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>otherminus</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="borrow">
@@ -704,8 +735,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>borrow</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="normalfirstovertime">
@@ -717,8 +753,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>normalfirstovertime</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="saturdayovertime">
@@ -730,8 +771,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>saturdayovertime</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="laborpension">
@@ -743,8 +789,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>laborpension</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="workerfee">
@@ -756,8 +807,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>workerfee</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="responsiblebouns">
@@ -769,8 +825,14 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>responsiblebouns</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="otherplus">
@@ -782,8 +844,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>otherplus</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="dayoff">
@@ -795,8 +862,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>dayoff</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="total_salary">
@@ -808,8 +880,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>total_salary</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="overtimeother">
@@ -821,8 +898,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>overtimeother</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="specialovertime">
@@ -834,8 +916,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>specialovertime</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="sundayfovertime_meals">
@@ -847,8 +934,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>sundayfovertime_meals</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="specialovertime_meals">
@@ -860,8 +952,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>specialovertime_meals</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="normalovertime_meals">
@@ -873,8 +970,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>normalovertime_meals</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="allrbouns">
@@ -886,8 +988,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>allrbouns</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="normalmeals">
@@ -899,8 +1006,14 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>normalmeals</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="openbouns">
@@ -912,8 +1025,14 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>openbouns</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="normalsecondovertime">
@@ -925,8 +1044,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>normalsecondovertime</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_3">
@@ -1010,10 +1134,10 @@
     <widget class="QLabel" name="ename_2">
      <property name="geometry">
       <rect>
-       <x>310</x>
+       <x>290</x>
        <y>30</y>
-       <width>58</width>
-       <height>15</height>
+       <width>81</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -1029,10 +1153,10 @@
     <widget class="QLabel" name="eid_2">
      <property name="geometry">
       <rect>
-       <x>220</x>
+       <x>200</x>
        <y>30</y>
-       <width>58</width>
-       <height>16</height>
+       <width>81</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -1048,27 +1172,43 @@
     <widget class="QLabel" name="label_36">
      <property name="geometry">
       <rect>
-       <x>60</x>
+       <x>100</x>
        <y>90</y>
-       <width>58</width>
-       <height>16</height>
+       <width>71</width>
+       <height>21</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="text">
-      <string>normal</string>
+      <string>一般項</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_37">
      <property name="geometry">
       <rect>
-       <x>330</x>
+       <x>380</x>
        <y>110</y>
-       <width>58</width>
-       <height>16</height>
+       <width>61</width>
+       <height>21</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="text">
-      <string>overtime</string>
+      <string>加班項</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_38">
@@ -1093,8 +1233,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>normaltotal</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_39">
@@ -1119,8 +1264,13 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>overtimetotal</string>
+      <string>0</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_7">
@@ -1459,6 +1609,32 @@
      </property>
      <property name="text">
       <string>元</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_50">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>30</y>
+       <width>58</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>年</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_61">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>60</y>
+       <width>58</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>月</string>
      </property>
     </widget>
    </widget>

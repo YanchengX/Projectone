@@ -37,9 +37,11 @@ class MainView(QtWidgets.QMainWindow):
         self.Basic_set.setObjectName("Basic_set")
         self.spectialdayoff = QtWidgets.QLineEdit(self.Basic_set)
         self.spectialdayoff.setGeometry(QtCore.QRect(370, 60, 154, 21))
+        self.spectialdayoff.setText("")
         self.spectialdayoff.setObjectName("spectialdayoff")
         self.ename = QtWidgets.QLineEdit(self.Basic_set)
         self.ename.setGeometry(QtCore.QRect(80, 100, 154, 21))
+        self.ename.setText("")
         self.ename.setObjectName("ename")
         self.label = QtWidgets.QLabel(self.Basic_set)
         self.label.setGeometry(QtCore.QRect(10, 20, 58, 16))
@@ -62,9 +64,11 @@ class MainView(QtWidgets.QMainWindow):
         self.seniority = QtWidgets.QLineEdit(self.Basic_set)
         self.seniority.setEnabled(True)
         self.seniority.setGeometry(QtCore.QRect(370, 20, 154, 21))
+        self.seniority.setText("")
         self.seniority.setObjectName("seniority")
         self.eid = QtWidgets.QLineEdit(self.Basic_set)
         self.eid.setGeometry(QtCore.QRect(80, 20, 154, 21))
+        self.eid.setText("")
         self.eid.setObjectName("eid")
         self.pushButton = QtWidgets.QPushButton(self.Basic_set)
         self.pushButton.setGeometry(QtCore.QRect(330, 190, 93, 41))
@@ -74,26 +78,30 @@ class MainView(QtWidgets.QMainWindow):
         self.pushButton_2.setObjectName("pushButton_2")
         self.basicsalary_2 = QtWidgets.QLineEdit(self.Basic_set)
         self.basicsalary_2.setGeometry(QtCore.QRect(370, 100, 154, 21))
+        self.basicsalary_2.setText("")
         self.basicsalary_2.setObjectName("basicsalary_2")
         self.eproperty = QtWidgets.QLineEdit(self.Basic_set)
         self.eproperty.setGeometry(QtCore.QRect(80, 60, 154, 21))
+        self.eproperty.setText("")
         self.eproperty.setObjectName("eproperty")
         self.Account = QtWidgets.QWidget(self.centralwidget)
         self.Account.setGeometry(QtCore.QRect(550, 10, 532, 791))
         self.Account.setObjectName("Account")
         self.month = QtWidgets.QLabel(self.Account)
-        self.month.setGeometry(QtCore.QRect(100, 20, 111, 31))
+        self.month.setGeometry(QtCore.QRect(10, 50, 71, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(14)
         self.month.setFont(font)
+        self.month.setAlignment(QtCore.Qt.AlignCenter)
         self.month.setObjectName("month")
         self.year = QtWidgets.QLabel(self.Account)
-        self.year.setGeometry(QtCore.QRect(10, 20, 81, 31))
+        self.year.setGeometry(QtCore.QRect(10, 20, 71, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(14)
         self.year.setFont(font)
+        self.year.setAlignment(QtCore.Qt.AlignCenter)
         self.year.setObjectName("year")
         self.label_9 = QtWidgets.QLabel(self.Account)
         self.label_9.setGeometry(QtCore.QRect(10, 120, 58, 21))
@@ -168,79 +176,151 @@ class MainView(QtWidgets.QMainWindow):
         self.basicsalary.setGeometry(QtCore.QRect(100, 120, 113, 22))
         font = QtGui.QFont()
         font.setFamily("Arial")
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setWeight(75)
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setWeight(50)
         self.basicsalary.setFont(font)
         self.basicsalary.setObjectName("basicsalary")
         self.healthfee = QtWidgets.QLineEdit(self.Account)
         self.healthfee.setGeometry(QtCore.QRect(100, 470, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.healthfee.setFont(font)
         self.healthfee.setObjectName("healthfee")
         self.sundayovertime = QtWidgets.QLineEdit(self.Account)
         self.sundayovertime.setGeometry(QtCore.QRect(380, 290, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.sundayovertime.setFont(font)
         self.sundayovertime.setObjectName("sundayovertime")
         self.saturdayovertime_meals = QtWidgets.QLineEdit(self.Account)
         self.saturdayovertime_meals.setGeometry(QtCore.QRect(380, 260, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.saturdayovertime_meals.setFont(font)
         self.saturdayovertime_meals.setObjectName("saturdayovertime_meals")
         self.mealcall = QtWidgets.QLineEdit(self.Account)
         self.mealcall.setGeometry(QtCore.QRect(100, 330, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.mealcall.setFont(font)
         self.mealcall.setObjectName("mealcall")
         self.otherminus = QtWidgets.QLineEdit(self.Account)
         self.otherminus.setGeometry(QtCore.QRect(100, 360, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.otherminus.setFont(font)
         self.otherminus.setObjectName("otherminus")
         self.borrow = QtWidgets.QLineEdit(self.Account)
         self.borrow.setGeometry(QtCore.QRect(100, 300, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.borrow.setFont(font)
         self.borrow.setObjectName("borrow")
         self.normalfirstovertime = QtWidgets.QLineEdit(self.Account)
         self.normalfirstovertime.setGeometry(QtCore.QRect(380, 140, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.normalfirstovertime.setFont(font)
         self.normalfirstovertime.setObjectName("normalfirstovertime")
         self.saturdayovertime = QtWidgets.QLineEdit(self.Account)
         self.saturdayovertime.setGeometry(QtCore.QRect(380, 230, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.saturdayovertime.setFont(font)
         self.saturdayovertime.setObjectName("saturdayovertime")
         self.laborpension = QtWidgets.QLineEdit(self.Account)
         self.laborpension.setGeometry(QtCore.QRect(100, 600, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.laborpension.setFont(font)
         self.laborpension.setObjectName("laborpension")
         self.workerfee = QtWidgets.QLineEdit(self.Account)
         self.workerfee.setGeometry(QtCore.QRect(100, 440, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.workerfee.setFont(font)
         self.workerfee.setObjectName("workerfee")
         self.responsiblebouns = QtWidgets.QLineEdit(self.Account)
         self.responsiblebouns.setGeometry(QtCore.QRect(100, 210, 113, 22))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        self.responsiblebouns.setFont(font)
         self.responsiblebouns.setObjectName("responsiblebouns")
         self.otherplus = QtWidgets.QLineEdit(self.Account)
         self.otherplus.setGeometry(QtCore.QRect(100, 240, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.otherplus.setFont(font)
         self.otherplus.setObjectName("otherplus")
         self.dayoff = QtWidgets.QLineEdit(self.Account)
         self.dayoff.setGeometry(QtCore.QRect(100, 270, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.dayoff.setFont(font)
         self.dayoff.setObjectName("dayoff")
         self.total_salary = QtWidgets.QLineEdit(self.Account)
         self.total_salary.setGeometry(QtCore.QRect(380, 630, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.total_salary.setFont(font)
         self.total_salary.setObjectName("total_salary")
         self.overtimeother = QtWidgets.QLineEdit(self.Account)
         self.overtimeother.setGeometry(QtCore.QRect(380, 410, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.overtimeother.setFont(font)
         self.overtimeother.setObjectName("overtimeother")
         self.specialovertime = QtWidgets.QLineEdit(self.Account)
         self.specialovertime.setGeometry(QtCore.QRect(380, 350, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.specialovertime.setFont(font)
         self.specialovertime.setObjectName("specialovertime")
         self.sundayfovertime_meals = QtWidgets.QLineEdit(self.Account)
         self.sundayfovertime_meals.setGeometry(QtCore.QRect(380, 320, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.sundayfovertime_meals.setFont(font)
         self.sundayfovertime_meals.setObjectName("sundayfovertime_meals")
         self.specialovertime_meals = QtWidgets.QLineEdit(self.Account)
         self.specialovertime_meals.setGeometry(QtCore.QRect(380, 380, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.specialovertime_meals.setFont(font)
         self.specialovertime_meals.setObjectName("specialovertime_meals")
         self.normalovertime_meals = QtWidgets.QLineEdit(self.Account)
         self.normalovertime_meals.setGeometry(QtCore.QRect(380, 200, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.normalovertime_meals.setFont(font)
         self.normalovertime_meals.setObjectName("normalovertime_meals")
         self.allrbouns = QtWidgets.QLineEdit(self.Account)
         self.allrbouns.setGeometry(QtCore.QRect(100, 410, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.allrbouns.setFont(font)
         self.allrbouns.setObjectName("allrbouns")
         self.normalmeals = QtWidgets.QLineEdit(self.Account)
         self.normalmeals.setGeometry(QtCore.QRect(100, 150, 113, 22))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        self.normalmeals.setFont(font)
         self.normalmeals.setObjectName("normalmeals")
         self.openbouns = QtWidgets.QLineEdit(self.Account)
         self.openbouns.setGeometry(QtCore.QRect(100, 180, 113, 22))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        self.openbouns.setFont(font)
         self.openbouns.setObjectName("openbouns")
         self.normalsecondovertime = QtWidgets.QLineEdit(self.Account)
         self.normalsecondovertime.setGeometry(QtCore.QRect(380, 170, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.normalsecondovertime.setFont(font)
         self.normalsecondovertime.setObjectName("normalsecondovertime")
         self.pushButton_3 = QtWidgets.QPushButton(self.Account)
         self.pushButton_3.setGeometry(QtCore.QRect(130, 730, 93, 41))
@@ -261,36 +341,54 @@ class MainView(QtWidgets.QMainWindow):
         self.pushButton_7.setGeometry(QtCore.QRect(400, 0, 121, 31))
         self.pushButton_7.setObjectName("pushButton_7")
         self.ename_2 = QtWidgets.QLabel(self.Account)
-        self.ename_2.setGeometry(QtCore.QRect(310, 30, 58, 15))
+        self.ename_2.setGeometry(QtCore.QRect(290, 30, 81, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
         self.ename_2.setFont(font)
         self.ename_2.setObjectName("ename_2")
         self.eid_2 = QtWidgets.QLabel(self.Account)
-        self.eid_2.setGeometry(QtCore.QRect(220, 30, 58, 16))
+        self.eid_2.setGeometry(QtCore.QRect(200, 30, 81, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
         self.eid_2.setFont(font)
         self.eid_2.setObjectName("eid_2")
         self.label_36 = QtWidgets.QLabel(self.Account)
-        self.label_36.setGeometry(QtCore.QRect(60, 90, 58, 16))
+        self.label_36.setGeometry(QtCore.QRect(100, 90, 71, 21))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_36.setFont(font)
         self.label_36.setObjectName("label_36")
         self.label_37 = QtWidgets.QLabel(self.Account)
-        self.label_37.setGeometry(QtCore.QRect(330, 110, 58, 16))
+        self.label_37.setGeometry(QtCore.QRect(380, 110, 61, 21))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_37.setFont(font)
         self.label_37.setObjectName("label_37")
         self.label_38 = QtWidgets.QLabel(self.Account)
         self.label_38.setGeometry(QtCore.QRect(10, 530, 61, 16))
         self.label_38.setObjectName("label_38")
         self.normaltotal = QtWidgets.QLineEdit(self.Account)
         self.normaltotal.setGeometry(QtCore.QRect(100, 530, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.normaltotal.setFont(font)
         self.normaltotal.setObjectName("normaltotal")
         self.label_39 = QtWidgets.QLabel(self.Account)
         self.label_39.setGeometry(QtCore.QRect(290, 530, 61, 16))
         self.label_39.setObjectName("label_39")
         self.overtimetotal = QtWidgets.QLineEdit(self.Account)
         self.overtimetotal.setGeometry(QtCore.QRect(380, 530, 113, 22))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.overtimetotal.setFont(font)
         self.overtimetotal.setObjectName("overtimetotal")
         self.label_7 = QtWidgets.QLabel(self.Account)
         self.label_7.setGeometry(QtCore.QRect(220, 120, 58, 21))
@@ -370,6 +468,12 @@ class MainView(QtWidgets.QMainWindow):
         self.label_64 = QtWidgets.QLabel(self.Account)
         self.label_64.setGeometry(QtCore.QRect(500, 630, 58, 21))
         self.label_64.setObjectName("label_64")
+        self.label_50 = QtWidgets.QLabel(self.Account)
+        self.label_50.setGeometry(QtCore.QRect(90, 30, 58, 15))
+        self.label_50.setObjectName("label_50")
+        self.label_61 = QtWidgets.QLabel(self.Account)
+        self.label_61.setGeometry(QtCore.QRect(90, 60, 58, 15))
+        self.label_61.setObjectName("label_61")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1088, 25))
@@ -396,20 +500,14 @@ class MainView(QtWidgets.QMainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.Totalpay.setText(_translate("MainWindow", "1,000,000,000"))
-        self.spectialdayoff.setText(_translate("MainWindow", "spectialdayoff"))
-        self.ename.setText(_translate("MainWindow", "ename"))
         self.label.setText(_translate("MainWindow", "員工編號"))
         self.label_2.setText(_translate("MainWindow", "年資"))
         self.label_3.setText(_translate("MainWindow", "員工性質"))
         self.label_4.setText(_translate("MainWindow", "特休"))
         self.label_5.setText(_translate("MainWindow", "員工姓名"))
         self.label_6.setText(_translate("MainWindow", "基本底薪"))
-        self.seniority.setText(_translate("MainWindow", "seniority"))
-        self.eid.setText(_translate("MainWindow", "eid"))
         self.pushButton.setText(_translate("MainWindow", "修改"))
         self.pushButton_2.setText(_translate("MainWindow", "完成"))
-        self.basicsalary_2.setText(_translate("MainWindow", "basicsalary"))
-        self.eproperty.setText(_translate("MainWindow", "eproperty"))
         self.month.setText(_translate("MainWindow", "month"))
         self.year.setText(_translate("MainWindow", "year"))
         self.label_9.setText(_translate("MainWindow", "基本底薪"))
@@ -435,30 +533,30 @@ class MainView(QtWidgets.QMainWindow):
         self.label_30.setText(_translate("MainWindow", "例假加"))
         self.label_31.setText(_translate("MainWindow", "例加伙食"))
         self.label_32.setText(_translate("MainWindow", "休加"))
-        self.basicsalary.setText(_translate("MainWindow", "basicsalary"))
-        self.healthfee.setText(_translate("MainWindow", "healthfee"))
-        self.sundayovertime.setText(_translate("MainWindow", "sundayovertime"))
-        self.saturdayovertime_meals.setText(_translate("MainWindow", "saturdayovertime_meals"))
-        self.mealcall.setText(_translate("MainWindow", "mealcall"))
-        self.otherminus.setText(_translate("MainWindow", "otherminus"))
-        self.borrow.setText(_translate("MainWindow", "borrow"))
-        self.normalfirstovertime.setText(_translate("MainWindow", "normalfirstovertime"))
-        self.saturdayovertime.setText(_translate("MainWindow", "saturdayovertime"))
-        self.laborpension.setText(_translate("MainWindow", "laborpension"))
-        self.workerfee.setText(_translate("MainWindow", "workerfee"))
-        self.responsiblebouns.setText(_translate("MainWindow", "responsiblebouns"))
-        self.otherplus.setText(_translate("MainWindow", "otherplus"))
-        self.dayoff.setText(_translate("MainWindow", "dayoff"))
-        self.total_salary.setText(_translate("MainWindow", "total_salary"))
-        self.overtimeother.setText(_translate("MainWindow", "overtimeother"))
-        self.specialovertime.setText(_translate("MainWindow", "specialovertime"))
-        self.sundayfovertime_meals.setText(_translate("MainWindow", "sundayfovertime_meals"))
-        self.specialovertime_meals.setText(_translate("MainWindow", "specialovertime_meals"))
-        self.normalovertime_meals.setText(_translate("MainWindow", "normalovertime_meals"))
-        self.allrbouns.setText(_translate("MainWindow", "allrbouns"))
-        self.normalmeals.setText(_translate("MainWindow", "normalmeals"))
-        self.openbouns.setText(_translate("MainWindow", "openbouns"))
-        self.normalsecondovertime.setText(_translate("MainWindow", "normalsecondovertime"))
+        self.basicsalary.setText(_translate("MainWindow", "0"))
+        self.healthfee.setText(_translate("MainWindow", "0"))
+        self.sundayovertime.setText(_translate("MainWindow", "0"))
+        self.saturdayovertime_meals.setText(_translate("MainWindow", "0"))
+        self.mealcall.setText(_translate("MainWindow", "0"))
+        self.otherminus.setText(_translate("MainWindow", "0"))
+        self.borrow.setText(_translate("MainWindow", "0"))
+        self.normalfirstovertime.setText(_translate("MainWindow", "0"))
+        self.saturdayovertime.setText(_translate("MainWindow", "0"))
+        self.laborpension.setText(_translate("MainWindow", "0"))
+        self.workerfee.setText(_translate("MainWindow", "0"))
+        self.responsiblebouns.setText(_translate("MainWindow", "0"))
+        self.otherplus.setText(_translate("MainWindow", "0"))
+        self.dayoff.setText(_translate("MainWindow", "0"))
+        self.total_salary.setText(_translate("MainWindow", "0"))
+        self.overtimeother.setText(_translate("MainWindow", "0"))
+        self.specialovertime.setText(_translate("MainWindow", "0"))
+        self.sundayfovertime_meals.setText(_translate("MainWindow", "0"))
+        self.specialovertime_meals.setText(_translate("MainWindow", "0"))
+        self.normalovertime_meals.setText(_translate("MainWindow", "0"))
+        self.allrbouns.setText(_translate("MainWindow", "0"))
+        self.normalmeals.setText(_translate("MainWindow", "0"))
+        self.openbouns.setText(_translate("MainWindow", "0"))
+        self.normalsecondovertime.setText(_translate("MainWindow", "0"))
         self.pushButton_3.setText(_translate("MainWindow", "試算修改"))
         self.pushButton_4.setText(_translate("MainWindow", "刪除"))
         self.pushButton_5.setText(_translate("MainWindow", "預覽"))
@@ -467,12 +565,12 @@ class MainView(QtWidgets.QMainWindow):
         self.pushButton_7.setText(_translate("MainWindow", "本月結算"))
         self.ename_2.setText(_translate("MainWindow", "ename"))
         self.eid_2.setText(_translate("MainWindow", "eid"))
-        self.label_36.setText(_translate("MainWindow", "normal"))
-        self.label_37.setText(_translate("MainWindow", "overtime"))
+        self.label_36.setText(_translate("MainWindow", "一般項"))
+        self.label_37.setText(_translate("MainWindow", "加班項"))
         self.label_38.setText(_translate("MainWindow", "一般總和"))
-        self.normaltotal.setText(_translate("MainWindow", "normaltotal"))
+        self.normaltotal.setText(_translate("MainWindow", "0"))
         self.label_39.setText(_translate("MainWindow", "加班總和"))
-        self.overtimetotal.setText(_translate("MainWindow", "overtimetotal"))
+        self.overtimetotal.setText(_translate("MainWindow", "0"))
         self.label_7.setText(_translate("MainWindow", "元"))
         self.label_8.setText(_translate("MainWindow", "次"))
         self.label_25.setText(_translate("MainWindow", "元"))
@@ -499,31 +597,195 @@ class MainView(QtWidgets.QMainWindow):
         self.label_60.setText(_translate("MainWindow", "元"))
         self.label_63.setText(_translate("MainWindow", "元"))
         self.label_64.setText(_translate("MainWindow", "元"))
+        self.label_50.setText(_translate("MainWindow", "年"))
+        self.label_61.setText(_translate("MainWindow", "月"))
         self.menumain.setTitle(_translate("MainWindow", "視窗"))
         self.actionMain.setText(_translate("MainWindow", "setvalue"))
         self.actionehistory.setText(_translate("MainWindow", "ehistory"))
 
+
+    def Ui_setting(self,MainWindow):
+        self.eid.setEnabled(False)
+        self.eproperty.setEnabled(False)
+        self.ename.setEnabled(False)
+        self.seniority.setEnabled(False)
+        self.spectialdayoff.setEnabled(False)
+        self.basicsalary_2.setEnabled(False)
+        self.basicsalary.setEnabled(False)
     def show_undoview(self):
         #view禁止點擊來編輯
         self.undoview.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.undoview.setModel(self.model)
 
+
     def undoview_clicked(self, QModelIndex):
-        #self.model.click_emp.connect(self.)
-        self.selectmodel =  self.undoview.selectionModel()
+        self.model.click_emp.connect(self.info_change)
+        self.controller.undoview_clicked(QModelIndex.row())
+        self.Ui_setting(self)
 
-        #print(self.model.infodata[QModelIndex.row()])
-        a = self.selectmodel.selectedIndexes()
-
-        #拿到index 用model找到值 並套入到label上
+    def info_change(self, infodata):
+        #basic_set
+        self.eid.setText(infodata[0])
+        self.eproperty.setText(infodata[1])
+        self.ename.setText(infodata[2])
+        self.seniority.setText(str(infodata[3]))
+        self.spectialdayoff.setText(str(infodata[4]))
+        self.basicsalary.setText(str(infodata[5]))
+        self.basicsalary_2.setText(str(infodata[5]))
+        #Account
+        self.eid_2.setText(infodata[0])
+        self.ename_2.setText(infodata[2])    
         
-    #依照該controller對應 設定其他按鍵事件跟controller連結
+
+    def infodata_edit_clicked(self):
+        self.model.info_edit_click.connect(self.infodata_editable)
+        self.controller.infodata_edit_clicked()
+
+    def infodata_editable(self):
+        self.eid.setEnabled(True)
+        self.eproperty.setEnabled(True)
+        self.ename.setEnabled(True)
+        self.seniority.setEnabled(True)
+        self.spectialdayoff.setEnabled(True)
+        self.basicsalary_2.setEnabled(True)
+
+
+    def infodata_done_clicked(self):
+        try:
+            self.model.info_done_click.connect(self.update_infodata)
+            self.tmp = [
+                self.eid.text(),
+                self.eproperty.text(),
+                self.ename.text(),
+                int(self.seniority.text()),
+                int(self.spectialdayoff.text()),
+                int(self.basicsalary_2.text())
+            ]
+            self.controller.infodata_done_clicked(self.tmp)
+        except:
+            QtWidgets.QMessageBox.information(self, '發生錯誤', '檢查是否已點擊員工或輸入錯誤')
+        finally:
+            self.model.info_done_click.disconnect(self.update_infodata)
+
+    def update_infodata(self, eid_data):
+        #不用messagebox, 用label顯示 尚未處理
+        print('done editing')
+        self.basicsalary.setText(self.basicsalary_2.text())
+        self.Ui_setting(self)
+
+
+
+    def accountdata_clicked(self):
+        self.model.accountdata_click.connect(self.update_accountdata)
+        try:
+            self.listdata = [
+            int(self.basicsalary.text()),
+            int(self.normalmeals.text()),
+            int(self.openbouns.text()),
+            int(self.responsiblebouns.text()),
+            int(self.otherplus.text()),
+            int(self.dayoff.text()),
+            int(self.borrow.text()),
+            int(self.mealcall.text()),
+            int(self.otherminus.text()), 
+            #-------normal
+            int(self.normalfirstovertime.text()),
+            int(self.normalsecondovertime.text()),
+            int(self.normalovertime_meals.text()),
+            int(self.saturdayovertime.text()),
+            int(self.saturdayovertime_meals.text()),
+            int(self.sundayovertime.text()),
+            int(self.sundayfovertime_meals.text()),
+            int(self.specialovertime.text()),
+            int(self.specialovertime_meals.text()),
+            int(self.overtimeother.text()),
+            #-------ovetime
+            int(self.allrbouns.text()),
+            int(self.workerfee.text()),
+            int(self.healthfee.text()),
+            int(self.normaltotal.text()),
+            int(self.overtimetotal.text()),
+            int(self.laborpension.text()),
+            int(self.total_salary.text()),    
+            #-------autoItem        
+            ]
+            self.controller.accountdata_clicked(self.listdata)
+            self.model.accountdata_click.disconnect(self.update_accountdata)
+        except:
+            QtWidgets.QMessageBox.information(self, '輸入錯誤', '不可輸入非數字')
+
+    def update_accountdata(self,listdata):
+        self.allrbouns.setText(str(listdata[0]))
+        self.workerfee.setText(str(listdata[1]))
+        self.healthfee.setText(str(listdata[2]))
+        self.normaltotal.setText(str(listdata[3]))
+        self.overtimetotal.setText(str(listdata[4]))
+        self.laborpension.setText(str(listdata[5]))
+        self.total_salary.setText(str(listdata[6]))
+        
+    def create_account_clicked(self):
+        self.model.create_click.connect(self.addtodoneview)
+        self.data = [
+            int(self.basicsalary.text()),
+            int(self.normalmeals.text()),
+            int(self.openbouns.text()),
+            int(self.responsiblebouns.text()),
+            int(self.otherplus.text()),
+            int(self.dayoff.text()),
+            int(self.borrow.text()),
+            int(self.mealcall.text()),
+            int(self.otherminus.text()), 
+            #-------normal
+            int(self.normalfirstovertime.text()),
+            int(self.normalsecondovertime.text()),
+            int(self.normalovertime_meals.text()),
+            int(self.saturdayovertime.text()),
+            int(self.saturdayovertime_meals.text()),
+            int(self.sundayovertime.text()),
+            int(self.sundayfovertime_meals.text()),
+            int(self.specialovertime.text()),
+            int(self.specialovertime_meals.text()),
+            int(self.overtimeother.text()),
+            #-------ovetime
+            int(self.allrbouns.text()),
+            int(self.workerfee.text()),
+            int(self.healthfee.text()),
+            int(self.normaltotal.text()),
+            int(self.overtimetotal.text()),
+            int(self.laborpension.text()),
+            int(self.total_salary.text()),    
+            #-------autoItem  
+        ]
+        
+        self.controller.create_account_clicked(self.data)
+    
+        
+        self.model.create_click.disconnect(self.addtodoneview)
+
+    def addtodoneview(self,strdata):
+        print(strdata)
+
+
+    def get_date(self):
+        self.model.date_signal.connect(self.getdate)
+        self.controller.get_date()
+
+    def getdate(self,yandm):
+        self.year.setText(str(yandm[0]))
+        self.month.setText(str(yandm[1]))
+
+    #依照該controller對應  connect畫面的button事件a
     def attachcontroller(self):
-        self.pushButton_5.clicked.connect(self.controller.preview)
-
-        #        
         self.show_undoview()
+        self.get_date()
         self.controller.show_undoview()
-        self.undoview.clicked.connect(self.undoview_clicked)
-        #
         
+        self.undoview.clicked.connect(self.undoview_clicked)
+        self.undoview.activated.connect(self.undoview_clicked)
+        self.pushButton.clicked.connect(self.infodata_edit_clicked)
+        self.pushButton_2.clicked.connect(self.infodata_done_clicked)        
+        self.pushButton_3.clicked.connect(self.accountdata_clicked)
+        self.pushButton_6.clicked.connect(self.create_account_clicked)
+
+
+        self.pushButton_5.clicked.connect(self.controller.preview)
