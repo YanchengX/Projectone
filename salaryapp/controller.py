@@ -21,9 +21,12 @@ class MainController(QObject):
     def accountdata_clicked(self, listaccountdata):
         self.model.accountdata_clicked(listaccountdata)
         
-    def create_account_clicked(self,listaccountdata):
-        self.model.create_account_clicked(listaccountdata)
+    def create_account_clicked(self, dictdata):
+        self.model.create_account_clicked(dictdata)
     
+    def delete_account_clicked(self, dictdata):
+        self.model.delete_account_clicked(dictdata)
+
     def get_date(self):
         self.model.get_date()
 

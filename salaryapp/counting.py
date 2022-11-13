@@ -168,6 +168,9 @@ laborpension = round(basicsalary * 0.06)
 # a = conn.execute("SELECT employee.eid, employee.year, employee.month, overtime.overtimetotal FROM overtime LEFT JOIN employee ON overtime.eid = employee.eid")
 # print(a.fetchall())
 
+# # JOIN 2
+# b = conn.execute("SELECT basicinfo.eid, basicinfo.eproperty, basicinfo.ename, eventdata.total_salary FROM basicinfo LEFT JOIN eventdata ON basicinfo.eid = eventdata.eid")
+# print(b.fetchall())
 
 # a = conn.execute("SELECT * FROM overtime WHERE 1")
 # print(a.fetchall())
@@ -182,11 +185,22 @@ laborpension = round(basicsalary * 0.06)
 # conn.execute("DELETE from basicinfo WHERE eid = :eid", {'eid':eid})
 # conn.execute("DELETE from eventdata WHERE eid = :eid", {'eid':eid})
 
-
 #update
 
 #conn.execute("UPDATE basicinfo SET basicsalary = 30000 WHERE eid='A02'")
 
+a = cur.execute('SELECT * FROM eventdata WHERE 1')
+
+gg = a.fetchall()
+n = 'A01'
+y = '2023'
+m = '10'
+for data in gg:
+    if n in data and y in data and m in data:
+        print('fuck')
+        break
+    else:
+        print('aa')
 
 conn.commit()
 conn.close()

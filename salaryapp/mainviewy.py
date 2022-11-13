@@ -27,11 +27,8 @@ class MainView(QtWidgets.QMainWindow):
         self.Totalpay.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.Totalpay.setObjectName("Totalpay")
         self.undoview = QtWidgets.QListView(self.Show)
-        self.undoview.setGeometry(QtCore.QRect(0, 0, 531, 231))
+        self.undoview.setGeometry(QtCore.QRect(0, 0, 531, 481))
         self.undoview.setObjectName("undoview")
-        self.doneview = QtWidgets.QListView(self.Show)
-        self.doneview.setGeometry(QtCore.QRect(0, 250, 531, 221))
-        self.doneview.setObjectName("doneview")
         self.Basic_set = QtWidgets.QWidget(self.centralwidget)
         self.Basic_set.setGeometry(QtCore.QRect(10, 550, 532, 259))
         self.Basic_set.setObjectName("Basic_set")
@@ -71,10 +68,10 @@ class MainView(QtWidgets.QMainWindow):
         self.eid.setText("")
         self.eid.setObjectName("eid")
         self.pushButton = QtWidgets.QPushButton(self.Basic_set)
-        self.pushButton.setGeometry(QtCore.QRect(330, 190, 93, 41))
+        self.pushButton.setGeometry(QtCore.QRect(330, 180, 93, 41))
         self.pushButton.setObjectName("pushButton")
         self.pushButton_2 = QtWidgets.QPushButton(self.Basic_set)
-        self.pushButton_2.setGeometry(QtCore.QRect(430, 190, 93, 41))
+        self.pushButton_2.setGeometry(QtCore.QRect(430, 180, 93, 41))
         self.pushButton_2.setObjectName("pushButton_2")
         self.basicsalary_2 = QtWidgets.QLineEdit(self.Basic_set)
         self.basicsalary_2.setGeometry(QtCore.QRect(370, 100, 154, 21))
@@ -84,11 +81,21 @@ class MainView(QtWidgets.QMainWindow):
         self.eproperty.setGeometry(QtCore.QRect(80, 60, 154, 21))
         self.eproperty.setText("")
         self.eproperty.setObjectName("eproperty")
+        self.line_2 = QtWidgets.QFrame(self.Basic_set)
+        self.line_2.setGeometry(QtCore.QRect(10, 0, 541, 20))
+        self.line_2.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_2.setObjectName("line_2")
+        self.line_4 = QtWidgets.QFrame(self.Basic_set)
+        self.line_4.setGeometry(QtCore.QRect(0, 10, 16, 221))
+        self.line_4.setFrameShape(QtWidgets.QFrame.VLine)
+        self.line_4.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_4.setObjectName("line_4")
         self.Account = QtWidgets.QWidget(self.centralwidget)
         self.Account.setGeometry(QtCore.QRect(550, 10, 532, 791))
         self.Account.setObjectName("Account")
         self.month = QtWidgets.QLabel(self.Account)
-        self.month.setGeometry(QtCore.QRect(10, 50, 71, 31))
+        self.month.setGeometry(QtCore.QRect(140, 50, 71, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(14)
@@ -96,7 +103,7 @@ class MainView(QtWidgets.QMainWindow):
         self.month.setAlignment(QtCore.Qt.AlignCenter)
         self.month.setObjectName("month")
         self.year = QtWidgets.QLabel(self.Account)
-        self.year.setGeometry(QtCore.QRect(10, 20, 71, 31))
+        self.year.setGeometry(QtCore.QRect(10, 50, 71, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(14)
@@ -341,17 +348,17 @@ class MainView(QtWidgets.QMainWindow):
         self.pushButton_7.setGeometry(QtCore.QRect(400, 0, 121, 31))
         self.pushButton_7.setObjectName("pushButton_7")
         self.ename_2 = QtWidgets.QLabel(self.Account)
-        self.ename_2.setGeometry(QtCore.QRect(290, 30, 81, 31))
+        self.ename_2.setGeometry(QtCore.QRect(390, 50, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
-        font.setPointSize(10)
+        font.setPointSize(12)
         self.ename_2.setFont(font)
         self.ename_2.setObjectName("ename_2")
         self.eid_2 = QtWidgets.QLabel(self.Account)
-        self.eid_2.setGeometry(QtCore.QRect(200, 30, 81, 31))
+        self.eid_2.setGeometry(QtCore.QRect(300, 50, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
-        font.setPointSize(10)
+        font.setPointSize(12)
         self.eid_2.setFont(font)
         self.eid_2.setObjectName("eid_2")
         self.label_36 = QtWidgets.QLabel(self.Account)
@@ -469,11 +476,34 @@ class MainView(QtWidgets.QMainWindow):
         self.label_64.setGeometry(QtCore.QRect(500, 630, 58, 21))
         self.label_64.setObjectName("label_64")
         self.label_50 = QtWidgets.QLabel(self.Account)
-        self.label_50.setGeometry(QtCore.QRect(90, 30, 58, 15))
+        self.label_50.setGeometry(QtCore.QRect(90, 50, 58, 31))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(12)
+        self.label_50.setFont(font)
         self.label_50.setObjectName("label_50")
         self.label_61 = QtWidgets.QLabel(self.Account)
-        self.label_61.setGeometry(QtCore.QRect(90, 60, 58, 15))
+        self.label_61.setGeometry(QtCore.QRect(240, 50, 41, 31))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(12)
+        self.label_61.setFont(font)
         self.label_61.setObjectName("label_61")
+        self.line = QtWidgets.QFrame(self.Account)
+        self.line.setGeometry(QtCore.QRect(0, 70, 531, 20))
+        self.line.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.line_3 = QtWidgets.QFrame(self.centralwidget)
+        self.line_3.setGeometry(QtCore.QRect(530, 560, 20, 221))
+        self.line_3.setFrameShape(QtWidgets.QFrame.VLine)
+        self.line_3.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_3.setObjectName("line_3")
+        self.line_5 = QtWidgets.QFrame(self.centralwidget)
+        self.line_5.setGeometry(QtCore.QRect(20, 770, 521, 20))
+        self.line_5.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_5.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_5.setObjectName("line_5")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1088, 25))
@@ -573,7 +603,7 @@ class MainView(QtWidgets.QMainWindow):
         self.overtimetotal.setText(_translate("MainWindow", "0"))
         self.label_7.setText(_translate("MainWindow", "元"))
         self.label_8.setText(_translate("MainWindow", "次"))
-        self.label_25.setText(_translate("MainWindow", "元"))
+        self.label_25.setText(_translate("MainWindow", "次"))
         self.label_34.setText(_translate("MainWindow", "元"))
         self.label_35.setText(_translate("MainWindow", "元"))
         self.label_40.setText(_translate("MainWindow", "元"))
@@ -588,11 +618,11 @@ class MainView(QtWidgets.QMainWindow):
         self.label_51.setText(_translate("MainWindow", "小時"))
         self.label_52.setText(_translate("MainWindow", "小時"))
         self.label_53.setText(_translate("MainWindow", "次"))
-        self.label_54.setText(_translate("MainWindow", "小時"))
+        self.label_54.setText(_translate("MainWindow", "天"))
         self.label_55.setText(_translate("MainWindow", "次"))
-        self.label_56.setText(_translate("MainWindow", "小時"))
+        self.label_56.setText(_translate("MainWindow", "天"))
         self.label_57.setText(_translate("MainWindow", "次"))
-        self.label_58.setText(_translate("MainWindow", "小時"))
+        self.label_58.setText(_translate("MainWindow", "天"))
         self.label_59.setText(_translate("MainWindow", "次"))
         self.label_60.setText(_translate("MainWindow", "元"))
         self.label_63.setText(_translate("MainWindow", "元"))
@@ -612,17 +642,19 @@ class MainView(QtWidgets.QMainWindow):
         self.spectialdayoff.setEnabled(False)
         self.basicsalary_2.setEnabled(False)
         self.basicsalary.setEnabled(False)
+
+
     def show_undoview(self):
         #view禁止點擊來編輯
         self.undoview.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.undoview.setModel(self.model)
+        self.controller.show_undoview()
 
 
     def undoview_clicked(self, QModelIndex):
         self.model.click_emp.connect(self.info_change)
         self.controller.undoview_clicked(QModelIndex.row())
         self.Ui_setting(self)
-
     def info_change(self, infodata):
         #basic_set
         self.eid.setText(infodata[0])
@@ -640,7 +672,6 @@ class MainView(QtWidgets.QMainWindow):
     def infodata_edit_clicked(self):
         self.model.info_edit_click.connect(self.infodata_editable)
         self.controller.infodata_edit_clicked()
-
     def infodata_editable(self):
         self.eid.setEnabled(True)
         self.eproperty.setEnabled(True)
@@ -666,13 +697,11 @@ class MainView(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.information(self, '發生錯誤', '檢查是否已點擊員工或輸入錯誤')
         finally:
             self.model.info_done_click.disconnect(self.update_infodata)
-
     def update_infodata(self, eid_data):
         #不用messagebox, 用label顯示 尚未處理
         print('done editing')
         self.basicsalary.setText(self.basicsalary_2.text())
         self.Ui_setting(self)
-
 
 
     def accountdata_clicked(self):
@@ -713,7 +742,6 @@ class MainView(QtWidgets.QMainWindow):
             self.model.accountdata_click.disconnect(self.update_accountdata)
         except:
             QtWidgets.QMessageBox.information(self, '輸入錯誤', '不可輸入非數字')
-
     def update_accountdata(self,listdata):
         self.allrbouns.setText(str(listdata[0]))
         self.workerfee.setText(str(listdata[1]))
@@ -723,68 +751,85 @@ class MainView(QtWidgets.QMainWindow):
         self.laborpension.setText(str(listdata[5]))
         self.total_salary.setText(str(listdata[6]))
         
+
     def create_account_clicked(self):
         self.model.create_click.connect(self.addtodoneview)
-        self.data = [
-            int(self.basicsalary.text()),
-            int(self.normalmeals.text()),
-            int(self.openbouns.text()),
-            int(self.responsiblebouns.text()),
-            int(self.otherplus.text()),
-            int(self.dayoff.text()),
-            int(self.borrow.text()),
-            int(self.mealcall.text()),
-            int(self.otherminus.text()), 
+        self.data = {
+            'eid'         :self.eid.text(),
+            'year'        :self.year.text(),
+            'month'       :self.month.text(),
+            #-------------
+            'basicsalary': int(self.basicsalary.text()),
+            'normalmeals': int(self.normalmeals.text()),
+            'openbouns':    int(self.openbouns.text()),
+            'responsiblebouns':int(self.responsiblebouns.text()),
+            'otherplus':    int(self.otherplus.text()),
+            'dayoff':       int(self.dayoff.text()),
+            'borrow':       int(self.borrow.text()),
+            'mealcall':     int(self.mealcall.text()),
+            'otherminus':   int(self.otherminus.text()), 
             #-------normal
-            int(self.normalfirstovertime.text()),
-            int(self.normalsecondovertime.text()),
-            int(self.normalovertime_meals.text()),
-            int(self.saturdayovertime.text()),
-            int(self.saturdayovertime_meals.text()),
-            int(self.sundayovertime.text()),
-            int(self.sundayfovertime_meals.text()),
-            int(self.specialovertime.text()),
-            int(self.specialovertime_meals.text()),
-            int(self.overtimeother.text()),
+            'normalfirstovertime' :int(self.normalfirstovertime.text()),
+            'normalsecondovertime':int(self.normalsecondovertime.text()),
+            'normalovertime_meals':int(self.normalovertime_meals.text()),
+            'saturdayovertime'    :int(self.saturdayovertime.text()),
+            'saturdayovertime_meals':int(self.saturdayovertime_meals.text()),
+            'sundayovertime'      :int(self.sundayovertime.text()),
+            'sundayfovertime_meals':int(self.sundayfovertime_meals.text()),
+            'specialovertime'     :int(self.specialovertime.text()),
+            'specialovertime_meals':int(self.specialovertime_meals.text()),
+            'overtimeother'       :int(self.overtimeother.text()),
             #-------ovetime
-            int(self.allrbouns.text()),
-            int(self.workerfee.text()),
-            int(self.healthfee.text()),
-            int(self.normaltotal.text()),
-            int(self.overtimetotal.text()),
-            int(self.laborpension.text()),
-            int(self.total_salary.text()),    
+            'allrbouns':int(self.allrbouns.text()),
+            'workerfee':int(self.workerfee.text()),
+            'healthfee':int(self.healthfee.text()),
+            'normaltotal':int(self.normaltotal.text()),
+            'overtimetotal':int(self.overtimetotal.text()),
+            'laborpension':int(self.laborpension.text()),
+            'total_salary':int(self.total_salary.text()),
             #-------autoItem  
-        ]
+        }
         
         self.controller.create_account_clicked(self.data)
     
-        
         self.model.create_click.disconnect(self.addtodoneview)
-
     def addtodoneview(self,strdata):
         print(strdata)
+
+
+    def delete_account_clicked(self):
+        self.model.delete_click.connect(self.delete_info)
+        self.data = {
+            'eid' : self.eid.text(),
+            'year': str(self.year.text()),
+            'month': str(self.month.text())
+        }
+        self.controller.delete_account_clicked(self.data)
+        self.model.delete_click.disconnect(self.delete_info)
+    def delete_info(self,eid):
+        self.info = '%s has been delete'%eid
+        print(self.info)
 
 
     def get_date(self):
         self.model.date_signal.connect(self.getdate)
         self.controller.get_date()
-
     def getdate(self,yandm):
         self.year.setText(str(yandm[0]))
         self.month.setText(str(yandm[1]))
 
-    #依照該controller對應  connect畫面的button事件a
+
+    #依照該button對應event進行connect (各事件再處理與controller的互動，這邊只是連接畫面跟事件觸及)
     def attachcontroller(self):
         self.show_undoview()
         self.get_date()
-        self.controller.show_undoview()
         
         self.undoview.clicked.connect(self.undoview_clicked)
         self.undoview.activated.connect(self.undoview_clicked)
         self.pushButton.clicked.connect(self.infodata_edit_clicked)
         self.pushButton_2.clicked.connect(self.infodata_done_clicked)        
         self.pushButton_3.clicked.connect(self.accountdata_clicked)
+        self.pushButton_4.clicked.connect(self.delete_account_clicked)
         self.pushButton_6.clicked.connect(self.create_account_clicked)
 
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1088</width>
-    <height>835</height>
+    <height>830</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,17 +53,7 @@
        <x>0</x>
        <y>0</y>
        <width>531</width>
-       <height>231</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QListView" name="doneview">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>250</y>
-       <width>531</width>
-       <height>221</height>
+       <height>481</height>
       </rect>
      </property>
     </widget>
@@ -72,8 +62,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>550</y>
-      <width>532</width>
+      <y>540</y>
+      <width>531</width>
       <height>259</height>
      </rect>
     </property>
@@ -214,7 +204,7 @@
      <property name="geometry">
       <rect>
        <x>330</x>
-       <y>190</y>
+       <y>180</y>
        <width>93</width>
        <height>41</height>
       </rect>
@@ -227,7 +217,7 @@
      <property name="geometry">
       <rect>
        <x>430</x>
-       <y>190</y>
+       <y>180</y>
        <width>93</width>
        <height>41</height>
       </rect>
@@ -262,6 +252,58 @@
       <string/>
      </property>
     </widget>
+    <widget class="Line" name="line_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>0</y>
+       <width>541</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="Line" name="line_4">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>16</width>
+       <height>221</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="Line" name="line_3">
+     <property name="geometry">
+      <rect>
+       <x>520</x>
+       <y>10</y>
+       <width>20</width>
+       <height>221</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="Line" name="line_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>220</y>
+       <width>521</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="Account" native="true">
     <property name="geometry">
@@ -275,7 +317,7 @@
     <widget class="QLabel" name="month">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>140</x>
        <y>50</y>
        <width>71</width>
        <height>31</height>
@@ -298,7 +340,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>20</y>
+       <y>50</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -1134,16 +1176,16 @@
     <widget class="QLabel" name="ename_2">
      <property name="geometry">
       <rect>
-       <x>290</x>
-       <y>30</y>
-       <width>81</width>
+       <x>390</x>
+       <y>50</y>
+       <width>91</width>
        <height>31</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>Arial</family>
-       <pointsize>10</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="text">
@@ -1153,16 +1195,16 @@
     <widget class="QLabel" name="eid_2">
      <property name="geometry">
       <rect>
-       <x>200</x>
-       <y>30</y>
-       <width>81</width>
+       <x>300</x>
+       <y>50</y>
+       <width>91</width>
        <height>31</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>Arial</family>
-       <pointsize>10</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="text">
@@ -1309,7 +1351,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>元</string>
+      <string>次</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_34">
@@ -1504,7 +1546,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>小時</string>
+      <string>天</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_55">
@@ -1530,7 +1572,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>小時</string>
+      <string>天</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_57">
@@ -1556,7 +1598,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>小時</string>
+      <string>天</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_59">
@@ -1615,10 +1657,16 @@
      <property name="geometry">
       <rect>
        <x>90</x>
-       <y>30</y>
+       <y>50</y>
        <width>58</width>
-       <height>15</height>
+       <height>31</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>年</string>
@@ -1627,14 +1675,33 @@
     <widget class="QLabel" name="label_61">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>60</y>
-       <width>58</width>
-       <height>15</height>
+       <x>240</x>
+       <y>50</y>
+       <width>41</width>
+       <height>31</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>月</string>
+     </property>
+    </widget>
+    <widget class="Line" name="line">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>70</y>
+       <width>531</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </widget>
@@ -1658,7 +1725,7 @@
    </widget>
    <addaction name="menumain"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionMain">
    <property name="text">
     <string>setvalue</string>
