@@ -94,7 +94,6 @@ System design:
 事件狀況:
 
 
-
 月薪全勤 沒全勤
 時新工讀計算 
 有請假 
@@ -123,13 +122,22 @@ widget
     新增按鍵 修改按鍵 刪除按鍵 預覽報表 "button"
 
 menubar
+新增-新增員工   設定-參數設定   資料庫-總歷史資料，員工歷史資料
 
 widget
-基本參數設定窗value_set
+新增員工窗new_emp_view
+    員工基本資訊 "label" "Line input"
+    新增鍵        "button"
+widget
+參數設定窗value_set_view
     顯示基本數據項 "label" "Line input"
     修改鍵        "button
 widget
-員工歷史資料窗ehistory
+總歷史資料窗thistory_view
+    選擇年分   "combobox"
+    顯示該年每月薪水資料 "Treeview"
+widget
+員工歷史資料窗ehistory_view
     選擇員工檢視   "combobox"
     顯示該員工歷年薪水資料 "Treeview"
     薪水細節    "widget"
@@ -164,8 +172,8 @@ mainviewy事件處理:
     #infodata_edit_clicked:
         基本資料修改按鈕，原本基本資料為disable不可更改的，按下編輯按鍵可以開放更改，再按一次無效
         info_edit_click pysignal不回傳值 單純點擊事件 切換listview員工時再度disabled
-        
-        暫定修改infoedit新增時間性修改成功label
+
+        暫定修改infoedit新增時間性的修改成功label -> 改為qbox更改成功infomation
     
     #infodata_done_clicked:
         基本資料完成按鈕，當被點擊儲存當前設定並分配好對應型態回到DB，並將line-edit改回disable
@@ -185,11 +193,12 @@ mainviewy事件處理:
             渲染自動更新項 給使用者看全部資訊。
         C-  
             呼叫model參數並附從view過來的參數xxx()
-        並try 防呆以防輸入錯誤。
-        信號週期signal -> 設定pysignal -> when event -> 信號綁定connect渲染處理方法 -> xx.emit(傳送訊號) ->記得disconnect已結束連接
+            並try 防呆以防輸入錯誤。
+            信號週期signal -> 設定pysignal -> when event -> 信號綁定connect渲染處理方法 -> xx.emit(傳送訊號) ->記得disconnect已結束連接
 
         (問題)auto項input放最後面 -> 使用者任意調整時 總total還是要再算一遍
         -> total 隨項改方法
+        (暫不處理)
 
     #getdate:
         獲得日期方法，並做年數遞增跟月份判斷(自己預設初始值)    
@@ -200,38 +209,47 @@ mainviewy事件處理:
             model 分別做DB儲存 然後跟listview一樣的形式並加上(薪水 + checked已計算 (join eventdata))
             DB -> 新增一次 需分辨唯一(eid + year + month)除非刪除後再新增
             insert -> eventdata, normal, overtime,
-
+            caseid再做邏輯判斷，假設新增按鈕進來的資料eid & year & month == unique 才給新增並caseid+1:
+            那必須就有東西紀錄eid,year,month -> eventdata上 假設三個都不再eventdata上就可以+1並insert data
+            記得caseid 跟 salarychecked連動
+            self.caseid = 目前(DB的)caseid長度-1
+            input(薪水資料) -> DB(event,normal,overtime) 確認eventdata為唯一並insert and caseid+1
+            -> DB(info) salary_checked改為True from該點觸員工eid input
             資料連動存入 eventdata(薪資事件+薪水) + normal(一般項db) + overtime(加班項db
         view:
-            view 丟入accountdata所有資料 跟信號顯示listview刷新
-        
-        >>先嘗試無意外輸入 是否正確 在嘗試做隨項調整total 在做更改
-        
-        caseid再做邏輯判斷，假設新增按鈕進來的資料eid & year & month == unique 才給新增並caseid+1:
-        那必須就有東西紀錄eid,year,month -> eventdata上 假設三個都不再eventdata上就可以+1並insert data
-        記得caseid 跟 salarychecked連動
-
-        self.caseid = 目前(DB的)caseid長度
-
-        input(薪水資料) -> DB(event,normal,overtime) 確認eventdata為唯一並insert and caseid+1
-         -> DB(info) salary_checked改為True from該點觸員工eid input
-        
-        (viewshow)
-        對應到顯示資料showview上面的show -> strdata to show
-        查basic join eventdata(當月的都會是唯一不會有狀況)
-        如果已登錄(salary_checked = T) 就顯示salary(from eventdata)
-        如果未登錄就(return '未登錄')
+            對應到顯示資料showview上面的show -> strdata to show
+            查basic join eventdata(當月的都會是唯一不會有狀況)
+            如果已登錄(salary_checked = T) 就顯示salary(from eventdata)
+            如果未登錄就(return '未登錄')
 
     #delete_account_clicked:
         在listview 選擇員工後並按下刪除按鈕後成立，未新增該月薪水的員工就防呆error
         signal -> delete_click return 該eid 
-        model > 已經選擇員工之下，input進來的對該eid,year,month刪除
-        (basicinfo-> salarychecked 改回0(False))
-        (eventdata, normal, overtime ->eid year month做key刪除資料)
-        control > 接收view put回來的資料傳到model
-        view > 透過line-edit 跟該當年月跟點到的哪個員工，呼叫controller傳入使用者操作資料
-        最後messagebox出已刪除
+            model > 已經選擇員工之下，input進來的對該eid,year,month刪除
+            (basicinfo-> salarychecked 改回0(False))
+            (eventdata, normal, overtime ->eid year month做key刪除資料)
+            control > 接收view put回來的資料傳到model
+            view > 透過line-edit 跟該當年月跟點到的哪個員工，呼叫controller傳入使用者操作資料
+            最後messagebox出已刪除
+    #sumtotal:
+        計算員工總新水，跟(show)listview抓資料把已新增的薪水相加，listview刷新時每次都會呼叫sum
+        
+        model -> listview只負責顯示資料，當薪水更新的時候每次都要呼叫show-view，model負責從model show view拿資料
+                (因為每次更新資料就會call一次)，
+        control - > 抓view資料
+        view ->  view label 要恆動計算(或是每次變數字時連帶呼叫(新增and刪除))，並之後當月計算從薪給算，
+        
+        1恆動 -> (設置永動器到程式關閉為止，數值存入以便下一次呼叫)
+        2更動時跟著計算 ->(新增或刪除時呼叫並渲染label跟存入數值)
+        採2方法
 
+    #listview_clicked2:
+
+        當點到listview時，如果已新增過薪水的話就讓account顯示已經登記過的資料到line上，反之則顯示(default)(0)並可以開始輸入
+        model -> qindex找到對應eid資料，並join DB(eventdata, normal, overtime)給account套用並改值回傳(多層left join)
+        control -> 接收過渡資料
+        view -> 接收該qindex，並給該eid，然後在更新畫面到account上，
+        預設與新增過的判斷式為eventdata有沒有該事件，如果用basicinfo其實沒有該員工問題就不會顯示在listview上，所以用event代表新增
 
     preview_clicked:
         預覽按鈕，當被clicked時，line-edit上的值傳入格式並出產到word預覽，
@@ -239,15 +257,27 @@ mainviewy事件處理:
             model接收line-eidt值並邏輯套用呼叫word，將value帶到裡面並產表。    
         tech -> python-docx
 
-
     (當月結算event)
     closed_Account:
  
+new_emp_view    
 
-view
-    
-    new_employee_clicked:
+value_set_view 
 
+undo ->
+    #員工編輯完成,刪除acc,新增error作qmesbox提示使用者
+    #account預設畫面調整
+    #view-clicked 套用已新增or預設資料到account edit上
+    #sumtotal Label計算總薪水 ->從list上已算出新水上抓資料相加
+preview_clicked 預覽成word技術 + 應用    
+是否可進行更改自動計算項    
+當月結算event處理
+-
+子畫面view呼叫:
+新增刪除員工view完成 ->new_emp_clicked新增刪除員工in DB
+設定-參數設定窗value_set_view   -> done_clicked 
+資料庫-總歷史資料 (待議)(時間充裕做)
+員工歷史資料     (待議)
 
 
 ----------------------資料庫    `
@@ -332,34 +362,3 @@ key編號
 開門50，
 全勤1000，
 責任1000
-
-
-        #0 int(self.basicsalary.text()),
-        #1 int(self.normalmeals.text()),
-        #2 int(self.openbouns.text()),
-        #3 int(self.responsiblebouns.text()),
-        #4 int(self.otherplus.text()),
-        #5 int(self.dayoff.text()),
-        #6 int(self.borrow.text()),
-        #7 int(self.mealcall.text()),
-        #8 int(self.otherminus.text()), 
-        # #-------normal
-        #9 int(self.normalfirstovertime.text()),
-        #10 int(self.normalsecondovertime.text()),
-        #11 int(self.normalovertime_meals.text()),
-        #12 int(self.saturdayovertime.text()),
-        #13 int(self.saturdayovertime_meals.text()),
-        #14 int(self.sundayovertime.text()),
-        #15 int(self.sundayfovertime_meals.text()),
-        #16 int(self.specialovertime.text()),
-        #17 int(self.specialovertime_meals.text()),
-        #18 int(self.overtimeother.text()),
-        # #-------ovetime
-        #19 int(self.allrbouns.text()),
-        #20 int(self.workerfee.text()),
-        #21 int(self.healthfee.text()),
-        #22 int(self.normaltotal.text()),
-        #23 int(self.overtimetotal.text()),
-        #24 int(self.laborpension.text()),
-        #25 int(self.total_salary.text()),    
-        # #-------autoItem

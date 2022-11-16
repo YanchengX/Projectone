@@ -109,41 +109,41 @@ laborpension = round(basicsalary * 0.06)
 # conn.execute("INSERT INTO normal VALUES(:eid, :year, :month, :normalmeals, :allrbouns,	:openbouns, :responsiblebouns, :otherplus, :workerfee, :healthfee, :dayoff, :borrow, :mealcall, :otherminus, :normaltotal)"
 # ,{
 
-# "eid":eid,
-# "year":year,
-# "month":month,
-# "normalmeals":normalmeals,
-# "allrbouns":allrbouns,
-# "openbouns":openbouns,
-# "responsiblebouns":responsiblebouns,
-# "otherplus":otherplus,
-# "workerfee":workerfee,
-# "healthfee":healthfee,
-# "dayoff":dayoff,
-# "borrow":borrow,
-# "mealcall":mealcall,
-# "otherminus":otherminus,
-# "normaltotal":normaltotal
+    # "eid":eid,
+    # "year":year,
+    # "month":month,
+    # "normalmeals":normalmeals,
+    # "allrbouns":allrbouns,
+    # "openbouns":openbouns,
+    # "responsiblebouns":responsiblebouns,
+    # "otherplus":otherplus,
+    # "workerfee":workerfee,
+    # "healthfee":healthfee,
+    # "dayoff":dayoff,
+    # "borrow":borrow,
+    # "mealcall":mealcall,
+    # "otherminus":otherminus,
+    # "normaltotal":normaltotal
 # })
 
 # #overtime insert
 
 # conn.execute("INSERT INTO overtime VALUES(:eid, :year, :month, :normalfirstovertime, :normalsecondovertime, :saturdayovertime, :specialovertime, :sundayovertime, :normalovertime_meals, :saturdayovertime_meals, :specialovertime_meals, :sundayfovertime_meals, :overtimeother, :overtimetotal)",{
 
-# "eid":eid,
-# "year":year,	
-# "month":month,
-# "normalfirstovertime":normalfirstovertime,     
-# "normalsecondovertime":normalsecondovertime,
-# "saturdayovertime":saturdayovertime,       
-# "specialovertime":specialovertime,	        
-# "sundayovertime":sundayovertime,	       
-# "normalovertime_meals":normalovertime_meals,   
-# "saturdayovertime_meals":saturdayovertime_meals,
-# "specialovertime_meals":specialovertime_meals, 
-# "sundayfovertime_meals":sundayfovertime_meals,
-# "overtimeother":overtimeother, 
-# "overtimetotal":overtimetotal
+    # "eid":eid,
+    # "year":year,	
+    # "month":month,
+    # "normalfirstovertime":normalfirstovertime,     
+    # "normalsecondovertime":normalsecondovertime,
+    # "saturdayovertime":saturdayovertime,       
+    # "specialovertime":specialovertime,	        
+    # "sundayovertime":sundayovertime,	       
+    # "normalovertime_meals":normalovertime_meals,   
+    # "saturdayovertime_meals":saturdayovertime_meals,
+    # "specialovertime_meals":specialovertime_meals, 
+    # "sundayfovertime_meals":sundayfovertime_meals,
+    # "overtimeother":overtimeother, 
+    # "overtimetotal":overtimetotal
 # })
 
 

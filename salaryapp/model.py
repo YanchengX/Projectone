@@ -3,14 +3,14 @@ from PyQt5.QtCore import QObject, pyqtSignal, QStringListModel
 import math
 
 class Model(QStringListModel):
-    click_emp = pyqtSignal(list)
+    click_emp = pyqtSignal(dict)
     info_edit_click = pyqtSignal()
     info_done_click = pyqtSignal(str)
     accountdata_click = pyqtSignal(list)
     create_click = pyqtSignal(str)
     delete_click = pyqtSignal(str)
     date_signal = pyqtSignal(list)
-    
+    sumtotalsignal = pyqtSignal(str)
 
     def __init__(self):
         super(Model, self).__init__()
@@ -26,6 +26,8 @@ class Model(QStringListModel):
         #year,month
         self.year = 2022
         self.month = 10
+        
+        self.totalpay = 0
 
         #normal_value參數
         self.workerfee_rate = 0.115 * 0.2
@@ -57,8 +59,92 @@ class Model(QStringListModel):
         self.setStringList(self.strdata)
 
     def undoview_clicked(self, index):
-        self.click_emp.emit(list(self.infodata[index]))
-
+        self.test = self.cursor.execute("SELECT eid FROM eventdata WHERE eid=:eid AND year = :year AND month = :month",{  'eid':self.infodata[index][0],  'year':self.year,  'month':self.month})
+        if self.test.fetchone() != None:
+            self.emp = self.cursor.execute("SELECT * FROM basicinfo LEFT JOIN eventdata ON basicinfo.eid = eventdata.eid LEFT JOIN normal ON basicinfo.eid = normal.eid LEFT JOIN overtime ON basicinfo.eid = overtime.eid WHERE eventdata.year = :year AND eventdata.month = :month AND basicinfo.eid =:eid",
+            {
+                'year' : self.year,
+                'month': self.month,
+                'eid' : self.infodata[index][0]
+            })
+            e = self.emp.fetchone()
+            self.data = {
+            "eid": e[0],
+            "eproperty":e[1],
+            "ename":e[2],
+            "seniority":e[3],
+            "specialdayoff":e[4],
+            "basicsalary":e[5],
+            "caseid":e[6],
+            "year":e[8],
+            "month":e[9],
+            "total_salary":e[11],
+            "laborpension":e[12],
+            "normalmeals":e[16],
+            "allrbouns":e[17],
+            "openbouns":e[18],
+            "responsiblebouns":e[19],
+            "otherplus":e[20],
+            "workerfee":e[21],
+            "healthfee":e[22],
+            "dayoff":e[23],
+            "borrow":e[24],
+            "mealcall":e[25],
+            "otherminus":e[26],
+            "normaltotal":e[27],
+            "normalfirstovertime":e[31],     
+            "normalsecondovertime":e[32],
+            "saturdayovertime":e[33],       
+            "specialovertime":e[34],	        
+            "sundayovertime":e[35],	       
+            "normalovertime_meals":e[36],   
+            "saturdayovertime_meals":e[37],
+            "specialovertime_meals":e[38], 
+            "sundayfovertime_meals":e[39],
+            "overtimeother":e[40], 
+            "overtimetotal":e[41]
+        }
+        else:
+            self.emp = self.cursor.execute("SELECT * FROM basicinfo WHERE eid =:eid ",{'eid':self.infodata[index][0]})
+            e = self.emp.fetchone()
+            self.data = {
+            "eid": e[0],
+            "eproperty":e[1],
+            "ename":e[2],
+            "seniority":e[3],
+            "specialdayoff":e[4],
+            "basicsalary":e[5],
+            "caseid": 0,
+            "year": self.year,
+            "month":self.month,
+            "total_salary":0,
+            "laborpension":0,
+            "normalmeals":0,
+            "allrbouns":0,
+            "openbouns":0,
+            "responsiblebouns":0,
+            "otherplus":0,
+            "workerfee":0,
+            "healthfee":0,
+            "dayoff":0,
+            "borrow":0,
+            "mealcall":0,
+            "otherminus":0,
+            "normaltotal":0,
+            "normalfirstovertime":0,     
+            "normalsecondovertime":0,
+            "saturdayovertime":0,       
+            "specialovertime":0,	        
+            "sundayovertime":0,	       
+            "normalovertime_meals":0,   
+            "saturdayovertime_meals":0,
+            "specialovertime_meals":0, 
+            "sundayfovertime_meals":0,
+            "overtimeother":0, 
+            "overtimetotal":0
+        }
+        self.click_emp.emit(self.data)
+        
     def infodata_edit_clicked(self):
         self.info_edit_click.emit()
     
@@ -79,7 +165,6 @@ class Model(QStringListModel):
         # self.returndata = [eid,eproperty,ename,seniority,spectialdayoff,basicsalary]
         self.info_done_click.emit(listinfodata[0])
     
-
     def accountdata_clicked(self, accountlistdata):
 
         #model 處理auto試算邏輯 但不接觸DB
@@ -128,18 +213,17 @@ class Model(QStringListModel):
         
         self.tmp = self.cursor.execute("SELECT eventdata.caseid, eventdata.eid, eventdata.year, eventdata.month FROM eventdata WHERE 1")
         self.eventdata = self.tmp.fetchall()
-        tmp = self.eventdata[len(self.eventdata)-1][0]
-        self.caseid = tmp
+        item = self.eventdata[len(self.eventdata)-1][0] if self.eventdata else 0
+        self.caseid = item
         self.count = 0
         for item in self.eventdata:
             if dictdata["eid"] in item and str(self.year) in item and str(self.month) in item:
-                print('重複新增該員工薪水，請進行修改或刪除重試')
+                self.create_click.emit(dictdata['eid'])
                 self.count += 1
                 break
         if self.count == False:
-            print(self.caseid)
             self.caseid += 1        
-            # update salarychecked
+            # update salarycheckedf
             self.cursor.execute("UPDATE basicinfo SET salarychecked = 1 WHERE eid = :eid",{'eid':dictdata['eid']})
             #insert data
             self.cursor.execute("INSERT INTO eventdata VALUES(:caseid, :eid, :year, :month, :total_salary, :laborpension)"
@@ -188,35 +272,48 @@ class Model(QStringListModel):
                 "overtimetotal":dictdata["overtimetotal"]
             })
             self.conn.commit()
-            self.show_undoview()
 
     def delete_account_clicked(self,dictdata):
-        self.cursor.execute("UPDATE basicinfo SET salarychecked = 0 WHERE eid = :eid",{'eid':dictdata['eid']})
-        self.cursor.execute("DELETE FROM eventdata WHERE eid = :eid AND year = :year AND month = :month",
-        {
-            'eid':dictdata['eid'],
-            'year':dictdata['year'],
-            'month':dictdata['month']
-        })
-        self.cursor.execute("DELETE FROM normal WHERE eid = :eid AND year = :year AND month = :month",
-        {
-            'eid':dictdata['eid'],
-            'year':dictdata['year'],
-            'month':dictdata['month']
-        })
-        self.cursor.execute("DELETE FROM overtime WHERE eid = :eid AND year = :year AND month = :month",
-        {
-            'eid':dictdata['eid'],
-            'year':dictdata['year'],
-            'month':dictdata['month']
-        })
-        self.conn.commit()
-        self.delete_click.emit(dictdata['eid'])
-        self.show_undoview()
+        try:
+            self.cursor.execute("UPDATE basicinfo SET salarychecked = 0 WHERE eid = :eid",{'eid':dictdata['eid']})
+            self.cursor.execute("DELETE FROM eventdata WHERE eid = :eid AND year = :year AND month = :month",
+            {
+                'eid':dictdata['eid'],
+                'year':dictdata['year'],
+                'month':dictdata['month']
+            })
+            self.cursor.execute("DELETE FROM normal WHERE eid = :eid AND year = :year AND month = :month",
+            {
+                'eid':dictdata['eid'],
+                'year':dictdata['year'],
+                'month':dictdata['month']
+            })
+            self.cursor.execute("DELETE FROM overtime WHERE eid = :eid AND year = :year AND month = :month",
+            {
+                'eid':dictdata['eid'],
+                'year':dictdata['year'],
+                'month':dictdata['month']
+            })
+            self.conn.commit()
+            self.delete_click.emit(dictdata['eid'])
+        except ValueError as e:
+            print(e)
 
-    def get_date(self):
-        self.date_signal.emit([self.year, self.month])
+    def sumtotal(self):
+        self.totalpay = 0
+        self.total =  self.cursor.execute("SELECT total_salary FROM eventdata WHERE year = :year and month = :month"
+        ,{
+            'year':str(self.year),
+            'month':str(self.month)
+            })
+        data = self.total.fetchall()
+        for item in data:
+            self.totalpay += int(item[0])
+        self.salary = format(self.totalpay,',')
+        self.sumtotalsignal.emit(self.salary)
 
     def preview(self):
         print('fuck you')
 
+    def get_date(self):
+        self.date_signal.emit([self.year, self.month])

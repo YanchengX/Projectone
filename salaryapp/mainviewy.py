@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from new_empy import New_emp
 
 class MainView(QtWidgets.QMainWindow):
     def __init__(self, model, controller):
@@ -8,9 +9,13 @@ class MainView(QtWidgets.QMainWindow):
         self.controller = controller
         self.attachcontroller()
 
+        self.show_undoview()
+        self.get_date()
+        self.sumtotal()
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1088, 835)
+        MainWindow.resize(1088, 830)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.Show = QtWidgets.QWidget(self.centralwidget)
@@ -30,7 +35,7 @@ class MainView(QtWidgets.QMainWindow):
         self.undoview.setGeometry(QtCore.QRect(0, 0, 531, 481))
         self.undoview.setObjectName("undoview")
         self.Basic_set = QtWidgets.QWidget(self.centralwidget)
-        self.Basic_set.setGeometry(QtCore.QRect(10, 550, 532, 259))
+        self.Basic_set.setGeometry(QtCore.QRect(10, 540, 531, 259))
         self.Basic_set.setObjectName("Basic_set")
         self.spectialdayoff = QtWidgets.QLineEdit(self.Basic_set)
         self.spectialdayoff.setGeometry(QtCore.QRect(370, 60, 154, 21))
@@ -91,6 +96,16 @@ class MainView(QtWidgets.QMainWindow):
         self.line_4.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_4.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_4.setObjectName("line_4")
+        self.line_3 = QtWidgets.QFrame(self.Basic_set)
+        self.line_3.setGeometry(QtCore.QRect(520, 10, 20, 221))
+        self.line_3.setFrameShape(QtWidgets.QFrame.VLine)
+        self.line_3.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_3.setObjectName("line_3")
+        self.line_5 = QtWidgets.QFrame(self.Basic_set)
+        self.line_5.setGeometry(QtCore.QRect(10, 220, 521, 20))
+        self.line_5.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_5.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_5.setObjectName("line_5")
         self.Account = QtWidgets.QWidget(self.centralwidget)
         self.Account.setGeometry(QtCore.QRect(550, 10, 532, 791))
         self.Account.setObjectName("Account")
@@ -117,7 +132,7 @@ class MainView(QtWidgets.QMainWindow):
         self.label_10.setGeometry(QtCore.QRect(10, 150, 61, 21))
         self.label_10.setObjectName("label_10")
         self.label_11 = QtWidgets.QLabel(self.Account)
-        self.label_11.setGeometry(QtCore.QRect(10, 410, 58, 16))
+        self.label_11.setGeometry(QtCore.QRect(10, 410, 61, 16))
         self.label_11.setObjectName("label_11")
         self.label_12 = QtWidgets.QLabel(self.Account)
         self.label_12.setGeometry(QtCore.QRect(10, 180, 58, 16))
@@ -144,7 +159,7 @@ class MainView(QtWidgets.QMainWindow):
         self.label_19.setGeometry(QtCore.QRect(10, 300, 58, 16))
         self.label_19.setObjectName("label_19")
         self.label_20 = QtWidgets.QLabel(self.Account)
-        self.label_20.setGeometry(QtCore.QRect(10, 330, 58, 16))
+        self.label_20.setGeometry(QtCore.QRect(10, 330, 61, 16))
         self.label_20.setObjectName("label_20")
         self.label_21 = QtWidgets.QLabel(self.Account)
         self.label_21.setGeometry(QtCore.QRect(290, 320, 58, 16))
@@ -156,7 +171,7 @@ class MainView(QtWidgets.QMainWindow):
         self.label_23.setGeometry(QtCore.QRect(290, 380, 58, 16))
         self.label_23.setObjectName("label_23")
         self.label_24 = QtWidgets.QLabel(self.Account)
-        self.label_24.setGeometry(QtCore.QRect(290, 410, 58, 16))
+        self.label_24.setGeometry(QtCore.QRect(290, 410, 61, 16))
         self.label_24.setObjectName("label_24")
         self.label_26 = QtWidgets.QLabel(self.Account)
         self.label_26.setGeometry(QtCore.QRect(10, 600, 58, 16))
@@ -494,34 +509,42 @@ class MainView(QtWidgets.QMainWindow):
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
-        self.line_3 = QtWidgets.QFrame(self.centralwidget)
-        self.line_3.setGeometry(QtCore.QRect(530, 560, 20, 221))
-        self.line_3.setFrameShape(QtWidgets.QFrame.VLine)
-        self.line_3.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line_3.setObjectName("line_3")
-        self.line_5 = QtWidgets.QFrame(self.centralwidget)
-        self.line_5.setGeometry(QtCore.QRect(20, 770, 521, 20))
-        self.line_5.setFrameShape(QtWidgets.QFrame.HLine)
-        self.line_5.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line_5.setObjectName("line_5")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1088, 25))
         self.menubar.setObjectName("menubar")
-        self.menumain = QtWidgets.QMenu(self.menubar)
-        self.menumain.setObjectName("menumain")
+        self.menu = QtWidgets.QMenu(self.menubar)
+        self.menu.setObjectName("menu")
+        self.menu_2 = QtWidgets.QMenu(self.menubar)
+        self.menu_2.setObjectName("menu_2")
+        self.menu_3 = QtWidgets.QMenu(self.menubar)
+        self.menu_3.setObjectName("menu_3")
         MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        self.statusBar = QtWidgets.QStatusBar(MainWindow)
+        self.statusBar.setObjectName("statusBar")
+        MainWindow.setStatusBar(self.statusBar)
         self.actionMain = QtWidgets.QAction(MainWindow)
         self.actionMain.setObjectName("actionMain")
         self.actionehistory = QtWidgets.QAction(MainWindow)
         self.actionehistory.setObjectName("actionehistory")
-        self.menumain.addSeparator()
-        self.menumain.addAction(self.actionMain)
-        self.menumain.addAction(self.actionehistory)
-        self.menubar.addAction(self.menumain.menuAction())
+        self.actionnew = QtWidgets.QAction(MainWindow)
+        self.actionnew.setObjectName("actionnew")
+        self.actiondelete = QtWidgets.QAction(MainWindow)
+        self.actiondelete.setObjectName("actiondelete")
+        self.actionsetting = QtWidgets.QAction(MainWindow)
+        self.actionsetting.setObjectName("actionsetting")
+        self.actionchistory = QtWidgets.QAction(MainWindow)
+        self.actionchistory.setObjectName("actionchistory")
+        self.actionehistory_2 = QtWidgets.QAction(MainWindow)
+        self.actionehistory_2.setObjectName("actionehistory_2")
+        self.menu.addAction(self.actionnew)
+        self.menu.addAction(self.actiondelete)
+        self.menu_2.addAction(self.actionsetting)
+        self.menu_3.addAction(self.actionchistory)
+        self.menu_3.addAction(self.actionehistory_2)
+        self.menubar.addAction(self.menu.menuAction())
+        self.menubar.addAction(self.menu_2.menuAction())
+        self.menubar.addAction(self.menu_3.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -587,7 +610,7 @@ class MainView(QtWidgets.QMainWindow):
         self.normalmeals.setText(_translate("MainWindow", "0"))
         self.openbouns.setText(_translate("MainWindow", "0"))
         self.normalsecondovertime.setText(_translate("MainWindow", "0"))
-        self.pushButton_3.setText(_translate("MainWindow", "試算修改"))
+        self.pushButton_3.setText(_translate("MainWindow", "試算"))
         self.pushButton_4.setText(_translate("MainWindow", "刪除"))
         self.pushButton_5.setText(_translate("MainWindow", "預覽"))
         self.pushButton_6.setText(_translate("MainWindow", "新增"))
@@ -629,9 +652,16 @@ class MainView(QtWidgets.QMainWindow):
         self.label_64.setText(_translate("MainWindow", "元"))
         self.label_50.setText(_translate("MainWindow", "年"))
         self.label_61.setText(_translate("MainWindow", "月"))
-        self.menumain.setTitle(_translate("MainWindow", "視窗"))
+        self.menu.setTitle(_translate("MainWindow", "員工"))
+        self.menu_2.setTitle(_translate("MainWindow", "設定"))
+        self.menu_3.setTitle(_translate("MainWindow", "資料"))
         self.actionMain.setText(_translate("MainWindow", "setvalue"))
         self.actionehistory.setText(_translate("MainWindow", "ehistory"))
+        self.actionnew.setText(_translate("MainWindow", "new"))
+        self.actiondelete.setText(_translate("MainWindow", "delete"))
+        self.actionsetting.setText(_translate("MainWindow", "setting"))
+        self.actionchistory.setText(_translate("MainWindow", "chistory"))
+        self.actionehistory_2.setText(_translate("MainWindow", "ehistory"))
 
 
     def Ui_setting(self,MainWindow):
@@ -655,20 +685,46 @@ class MainView(QtWidgets.QMainWindow):
         self.model.click_emp.connect(self.info_change)
         self.controller.undoview_clicked(QModelIndex.row())
         self.Ui_setting(self)
-    def info_change(self, infodata):
+    def info_change(self, dict_empdata):
         #basic_set
-        self.eid.setText(infodata[0])
-        self.eproperty.setText(infodata[1])
-        self.ename.setText(infodata[2])
-        self.seniority.setText(str(infodata[3]))
-        self.spectialdayoff.setText(str(infodata[4]))
-        self.basicsalary.setText(str(infodata[5]))
-        self.basicsalary_2.setText(str(infodata[5]))
+        self.eid.setText(dict_empdata['eid'])
+        self.eproperty.setText(dict_empdata['eproperty'])
+        self.ename.setText(dict_empdata['ename'])
+        self.seniority.setText(str(dict_empdata['seniority']))
+        self.spectialdayoff.setText(str(dict_empdata['specialdayoff']))
+        self.basicsalary.setText(str(dict_empdata['basicsalary']))
+        self.basicsalary_2.setText(str(dict_empdata['basicsalary']))
         #Account
-        self.eid_2.setText(infodata[0])
-        self.ename_2.setText(infodata[2])    
-        
+        self.eid_2.setText(dict_empdata['eid'])
+        self.ename_2.setText(dict_empdata['ename'])    
+        #Account-detail
+        self.total_salary.setText(str(dict_empdata['total_salary']))
+        self.laborpension.setText(str(dict_empdata['laborpension']))
+        self.normalmeals.setText(str(dict_empdata['normalmeals']))
+        self.allrbouns.setText(str(dict_empdata['allrbouns']))
+        self.openbouns.setText(str(dict_empdata['openbouns']))
+        self.responsiblebouns.setText(str(dict_empdata['responsiblebouns']))
+        self.otherplus.setText(str(dict_empdata['otherplus']))
+        self.workerfee.setText(str(dict_empdata['workerfee']))
+        self.healthfee.setText(str(dict_empdata['healthfee']))
+        self.dayoff.setText(str(dict_empdata['dayoff']))
+        self.borrow.setText(str(dict_empdata['borrow']))
+        self.mealcall.setText(str(dict_empdata['mealcall']))
+        self.otherminus.setText(str(dict_empdata['otherminus']))
+        self.normaltotal.setText(str(dict_empdata['normaltotal']))
+        self.normalfirstovertime.setText(str(dict_empdata['normalfirstovertime']))
+        self.normalsecondovertime.setText(str(dict_empdata['normalsecondovertime']))
+        self.saturdayovertime.setText(str(dict_empdata['saturdayovertime']))
+        self.specialovertime.setText(str(dict_empdata['specialovertime']))
+        self.sundayovertime.setText(str(dict_empdata['sundayovertime']))
+        self.normalovertime_meals.setText(str(dict_empdata['normalovertime_meals']))
+        self.saturdayovertime_meals.setText(str(dict_empdata['saturdayovertime_meals']))
+        self.specialovertime_meals.setText(str(dict_empdata['specialovertime_meals']))
+        self.sundayfovertime_meals.setText(str(dict_empdata['sundayfovertime_meals']))
+        self.overtimeother.setText(str(dict_empdata['overtimeother']))
+        self.overtimetotal.setText(str(dict_empdata['overtimetotal']))
 
+        
     def infodata_edit_clicked(self):
         self.model.info_edit_click.connect(self.infodata_editable)
         self.controller.infodata_edit_clicked()
@@ -699,7 +755,7 @@ class MainView(QtWidgets.QMainWindow):
             self.model.info_done_click.disconnect(self.update_infodata)
     def update_infodata(self, eid_data):
         #不用messagebox, 用label顯示 尚未處理
-        print('done editing')
+        QtWidgets.QMessageBox.information(self, '修改成功', '%s 已更新資料'%eid_data)
         self.basicsalary.setText(self.basicsalary_2.text())
         self.Ui_setting(self)
 
@@ -791,11 +847,11 @@ class MainView(QtWidgets.QMainWindow):
         }
         
         self.controller.create_account_clicked(self.data)
-    
+        self.controller.show_undoview()
         self.model.create_click.disconnect(self.addtodoneview)
+        self.sumtotal()
     def addtodoneview(self,strdata):
-        print(strdata)
-
+        QtWidgets.QMessageBox.information(self, '新增失敗', '重複新增%s的薪水，請進行修改或刪除重試'%strdata)
 
     def delete_account_clicked(self):
         self.model.delete_click.connect(self.delete_info)
@@ -805,11 +861,19 @@ class MainView(QtWidgets.QMainWindow):
             'month': str(self.month.text())
         }
         self.controller.delete_account_clicked(self.data)
+        self.controller.show_undoview()
         self.model.delete_click.disconnect(self.delete_info)
+        self.sumtotal()
     def delete_info(self,eid):
-        self.info = '%s has been delete'%eid
-        print(self.info)
+        self.info = '%s 資料已經被刪除'%eid
+        QtWidgets.QMessageBox.information(self, '刪除成功', self.info)
 
+    def sumtotal(self):
+        self.model.sumtotalsignal.connect(self.sum_refresh)
+        self.controller.sumtotal()
+        self.model.sumtotalsignal.disconnect(self.sum_refresh)
+    def sum_refresh(self,sum_salary):
+        self.Totalpay.setText(sum_salary)
 
     def get_date(self):
         self.model.date_signal.connect(self.getdate)
@@ -818,11 +882,11 @@ class MainView(QtWidgets.QMainWindow):
         self.year.setText(str(yandm[0]))
         self.month.setText(str(yandm[1]))
 
-
+    def newemp(self):
+        self.new_emp_window = New_emp()
+        self.new_emp_window.show()
     #依照該button對應event進行connect (各事件再處理與controller的互動，這邊只是連接畫面跟事件觸及)
     def attachcontroller(self):
-        self.show_undoview()
-        self.get_date()
         
         self.undoview.clicked.connect(self.undoview_clicked)
         self.undoview.activated.connect(self.undoview_clicked)
@@ -831,6 +895,7 @@ class MainView(QtWidgets.QMainWindow):
         self.pushButton_3.clicked.connect(self.accountdata_clicked)
         self.pushButton_4.clicked.connect(self.delete_account_clicked)
         self.pushButton_6.clicked.connect(self.create_account_clicked)
-
+        self.actionnew.triggered.connect(self.newemp)
 
         self.pushButton_5.clicked.connect(self.controller.preview)
+

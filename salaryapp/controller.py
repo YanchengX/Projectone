@@ -27,6 +27,9 @@ class MainController(QObject):
     def delete_account_clicked(self, dictdata):
         self.model.delete_account_clicked(dictdata)
 
+    def sumtotal(self):
+        self.model.sumtotal()
+
     def get_date(self):
         self.model.get_date()
 
