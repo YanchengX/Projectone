@@ -1,6 +1,7 @@
 import sqlite3
 from PyQt5.QtCore import QObject, pyqtSignal, QStringListModel
 import math
+from doct import Preview
 
 class Model(QStringListModel):
     click_emp = pyqtSignal(dict)
@@ -9,6 +10,7 @@ class Model(QStringListModel):
     accountdata_click = pyqtSignal(list)
     create_click = pyqtSignal(str)
     delete_click = pyqtSignal(str)
+    preview_click = pyqtSignal(list)
     date_signal = pyqtSignal(list)
     sumtotalsignal = pyqtSignal(str)
 
@@ -312,8 +314,9 @@ class Model(QStringListModel):
         self.salary = format(self.totalpay,',')
         self.sumtotalsignal.emit(self.salary)
 
-    def preview(self):
-        print('fuck you')
+    def preview(self, eid):
+        self.pre = Preview(self.year, self.month, eid)
+        self.preview_click.emit([eid])
 
     def get_date(self):
         self.date_signal.emit([self.year, self.month])

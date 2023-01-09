@@ -548,6 +548,45 @@ class MainView(QtWidgets.QMainWindow):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        MainWindow.setTabOrder(self.undoview, self.eid)
+        MainWindow.setTabOrder(self.eid, self.seniority)
+        MainWindow.setTabOrder(self.seniority, self.eproperty)
+        MainWindow.setTabOrder(self.eproperty, self.spectialdayoff)
+        MainWindow.setTabOrder(self.spectialdayoff, self.ename)
+        MainWindow.setTabOrder(self.ename, self.basicsalary_2)
+        MainWindow.setTabOrder(self.basicsalary_2, self.pushButton)
+        MainWindow.setTabOrder(self.pushButton, self.pushButton_2)
+        MainWindow.setTabOrder(self.pushButton_2, self.basicsalary)
+        MainWindow.setTabOrder(self.basicsalary, self.normalmeals)
+        MainWindow.setTabOrder(self.normalmeals, self.openbouns)
+        MainWindow.setTabOrder(self.openbouns, self.responsiblebouns)
+        MainWindow.setTabOrder(self.responsiblebouns, self.otherplus)
+        MainWindow.setTabOrder(self.otherplus, self.dayoff)
+        MainWindow.setTabOrder(self.dayoff, self.borrow)
+        MainWindow.setTabOrder(self.borrow, self.mealcall)
+        MainWindow.setTabOrder(self.mealcall, self.otherminus)
+        MainWindow.setTabOrder(self.otherminus, self.allrbouns)
+        MainWindow.setTabOrder(self.allrbouns, self.workerfee)
+        MainWindow.setTabOrder(self.workerfee, self.healthfee)
+        MainWindow.setTabOrder(self.healthfee, self.normalfirstovertime)
+        MainWindow.setTabOrder(self.normalfirstovertime, self.normalsecondovertime)
+        MainWindow.setTabOrder(self.normalsecondovertime, self.normalovertime_meals)
+        MainWindow.setTabOrder(self.normalovertime_meals, self.saturdayovertime)
+        MainWindow.setTabOrder(self.saturdayovertime, self.saturdayovertime_meals)
+        MainWindow.setTabOrder(self.saturdayovertime_meals, self.sundayovertime)
+        MainWindow.setTabOrder(self.sundayovertime, self.sundayfovertime_meals)
+        MainWindow.setTabOrder(self.sundayfovertime_meals, self.specialovertime)
+        MainWindow.setTabOrder(self.specialovertime, self.specialovertime_meals)
+        MainWindow.setTabOrder(self.specialovertime_meals, self.overtimeother)
+        MainWindow.setTabOrder(self.overtimeother, self.normaltotal)
+        MainWindow.setTabOrder(self.normaltotal, self.overtimetotal)
+        MainWindow.setTabOrder(self.overtimetotal, self.laborpension)
+        MainWindow.setTabOrder(self.laborpension, self.total_salary)
+        MainWindow.setTabOrder(self.total_salary, self.pushButton_3)
+        MainWindow.setTabOrder(self.pushButton_3, self.pushButton_4)
+        MainWindow.setTabOrder(self.pushButton_4, self.pushButton_5)
+        MainWindow.setTabOrder(self.pushButton_5, self.pushButton_6)
+        MainWindow.setTabOrder(self.pushButton_6, self.pushButton_7)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -662,7 +701,6 @@ class MainView(QtWidgets.QMainWindow):
         self.actionsetting.setText(_translate("MainWindow", "setting"))
         self.actionchistory.setText(_translate("MainWindow", "chistory"))
         self.actionehistory_2.setText(_translate("MainWindow", "ehistory"))
-
 
     def Ui_setting(self,MainWindow):
         self.eid.setEnabled(False)
@@ -806,7 +844,7 @@ class MainView(QtWidgets.QMainWindow):
         self.overtimetotal.setText(str(listdata[4]))
         self.laborpension.setText(str(listdata[5]))
         self.total_salary.setText(str(listdata[6]))
-        
+
 
     def create_account_clicked(self):
         self.model.create_click.connect(self.addtodoneview)
@@ -867,6 +905,44 @@ class MainView(QtWidgets.QMainWindow):
     def delete_info(self,eid):
         self.info = '%s 資料已經被刪除'%eid
         QtWidgets.QMessageBox.information(self, '刪除成功', self.info)
+        #account-detail item refresh
+        self.total_salary.setText('0')
+        self.laborpension.setText('0')
+        self.normalmeals.setText('0')
+        self.allrbouns.setText('0')
+        self.openbouns.setText('0')
+        self.responsiblebouns.setText('0')
+        self.otherplus.setText('0')
+        self.workerfee.setText('0')
+        self.healthfee.setText('0')
+        self.dayoff.setText('0')
+        self.borrow.setText('0')
+        self.mealcall.setText('0')
+        self.otherminus.setText('0')
+        self.normaltotal.setText('0')
+        self.normalfirstovertime.setText('0')
+        self.normalsecondovertime.setText('0')
+        self.saturdayovertime.setText('0')
+        self.specialovertime.setText('0')
+        self.sundayovertime.setText('0')
+        self.normalovertime_meals.setText('0')
+        self.saturdayovertime_meals.setText('0')
+        self.specialovertime_meals.setText('0')
+        self.sundayfovertime_meals.setText('0')
+        self.overtimeother.setText('0')
+        self.overtimetotal.setText('0')
+
+
+    def preview_word(self):
+        self.model.preview_click.connect(self.wordshow)
+        self.input = {
+            'eid':self.eid.text(),
+        }
+        self.controller.preview_clicked(self.input)
+        self.model.preview_click.disconnect(self.wordshow)
+        
+    def wordshow(self,emp_info):
+        pass
 
     def sumtotal(self):
         self.model.sumtotalsignal.connect(self.sum_refresh)
@@ -894,8 +970,8 @@ class MainView(QtWidgets.QMainWindow):
         self.pushButton_2.clicked.connect(self.infodata_done_clicked)        
         self.pushButton_3.clicked.connect(self.accountdata_clicked)
         self.pushButton_4.clicked.connect(self.delete_account_clicked)
+        self.pushButton_5.clicked.connect(self.preview_word)
         self.pushButton_6.clicked.connect(self.create_account_clicked)
         self.actionnew.triggered.connect(self.newemp)
 
-        self.pushButton_5.clicked.connect(self.controller.preview)
-
+        

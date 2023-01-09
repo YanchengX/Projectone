@@ -1776,6 +1776,48 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>undoview</tabstop>
+  <tabstop>eid</tabstop>
+  <tabstop>seniority</tabstop>
+  <tabstop>eproperty</tabstop>
+  <tabstop>spectialdayoff</tabstop>
+  <tabstop>ename</tabstop>
+  <tabstop>basicsalary_2</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>pushButton_2</tabstop>
+  <tabstop>basicsalary</tabstop>
+  <tabstop>normalmeals</tabstop>
+  <tabstop>openbouns</tabstop>
+  <tabstop>responsiblebouns</tabstop>
+  <tabstop>otherplus</tabstop>
+  <tabstop>dayoff</tabstop>
+  <tabstop>borrow</tabstop>
+  <tabstop>mealcall</tabstop>
+  <tabstop>otherminus</tabstop>
+  <tabstop>allrbouns</tabstop>
+  <tabstop>workerfee</tabstop>
+  <tabstop>healthfee</tabstop>
+  <tabstop>normalfirstovertime</tabstop>
+  <tabstop>normalsecondovertime</tabstop>
+  <tabstop>normalovertime_meals</tabstop>
+  <tabstop>saturdayovertime</tabstop>
+  <tabstop>saturdayovertime_meals</tabstop>
+  <tabstop>sundayovertime</tabstop>
+  <tabstop>sundayfovertime_meals</tabstop>
+  <tabstop>specialovertime</tabstop>
+  <tabstop>specialovertime_meals</tabstop>
+  <tabstop>overtimeother</tabstop>
+  <tabstop>normaltotal</tabstop>
+  <tabstop>overtimetotal</tabstop>
+  <tabstop>laborpension</tabstop>
+  <tabstop>total_salary</tabstop>
+  <tabstop>pushButton_3</tabstop>
+  <tabstop>pushButton_4</tabstop>
+  <tabstop>pushButton_5</tabstop>
+  <tabstop>pushButton_6</tabstop>
+  <tabstop>pushButton_7</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
