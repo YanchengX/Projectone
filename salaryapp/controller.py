@@ -18,8 +18,11 @@ class MainController(QObject):
     def infodata_done_clicked(self, listinfodata):
         self.model.infodata_done_clicked(listinfodata)
 
-    def accountdata_clicked(self, listaccountdata):
-        self.model.accountdata_clicked(listaccountdata)
+    def account_guide_checked(self, index):
+        self.model.account_guide_checked(index)
+    
+    #def accountdata_clicked(self, listaccountdata):
+    #    self.model.accountdata_clicked(listaccountdata)
         
     def create_account_clicked(self, dictdata):
         self.model.create_account_clicked(dictdata)

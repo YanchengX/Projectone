@@ -10,6 +10,7 @@ class MainView(QtWidgets.QMainWindow):
         self.attachcontroller()
 
         self.show_undoview()
+        self.default_set()      #diable all textable
         self.get_date()
         self.sumtotal()
 
@@ -702,14 +703,13 @@ class MainView(QtWidgets.QMainWindow):
         self.actionchistory.setText(_translate("MainWindow", "chistory"))
         self.actionehistory_2.setText(_translate("MainWindow", "ehistory"))
 
-    def Ui_setting(self,MainWindow):
-        self.eid.setEnabled(False)
-        self.eproperty.setEnabled(False)
-        self.ename.setEnabled(False)
-        self.seniority.setEnabled(False)
-        self.spectialdayoff.setEnabled(False)
-        self.basicsalary_2.setEnabled(False)
-        self.basicsalary.setEnabled(False)
+#listview click guide event(prevent)
+    def undoclick_setting(self,MainWindow):
+        #basic info disable
+        self.info_disable()
+        self.pushButton_2.setEnabled(False)        
+        #Account-detail
+        self.account_able()
 
 
     def show_undoview(self):
@@ -718,11 +718,88 @@ class MainView(QtWidgets.QMainWindow):
         self.undoview.setModel(self.model)
         self.controller.show_undoview()
 
+    #防呆引導insert switch
+    def info_able(self):
+        self.eproperty.setEnabled(True)
+        self.ename.setEnabled(True)
+        self.seniority.setEnabled(True)
+        self.spectialdayoff.setEnabled(True)
+        self.basicsalary_2.setEnabled(True)
+    def info_disable(self):
+        self.eid.setEnabled(False)
+        self.eproperty.setEnabled(False)
+        self.ename.setEnabled(False)
+        self.seniority.setEnabled(False)
+        self.spectialdayoff.setEnabled(False)
+        self.basicsalary.setEnabled(False)
+        self.basicsalary_2.setEnabled(False)    
+    def account_able(self):
+        self.normalmeals.setEnabled(True)
+        self.allrbouns.setEnabled(True)
+        self.openbouns.setEnabled(True)
+        self.responsiblebouns.setEnabled(True)
+        self.otherplus.setEnabled(True)
+        self.workerfee.setEnabled(True)
+        self.healthfee.setEnabled(True)
+        self.dayoff.setEnabled(True)
+        self.borrow.setEnabled(True)
+        self.mealcall.setEnabled(True)
+        self.otherminus.setEnabled(True)
+        self.normalfirstovertime.setEnabled(True)
+        self.normalsecondovertime.setEnabled(True)
+        self.saturdayovertime.setEnabled(True)
+        self.specialovertime.setEnabled(True)
+        self.sundayovertime.setEnabled(True)
+        self.normalovertime_meals.setEnabled(True)
+        self.saturdayovertime_meals.setEnabled(True)
+        self.specialovertime_meals.setEnabled(True)
+        self.sundayfovertime_meals.setEnabled(True)
+        self.overtimeother.setEnabled(True)
+    def account_disable(self):
+        self.total_salary.setEnabled(False)
+        self.laborpension.setEnabled(False)
+        self.normalmeals.setEnabled(False)
+        self.allrbouns.setEnabled(False)
+        self.openbouns.setEnabled(False)
+        self.responsiblebouns.setEnabled(False)
+        self.otherplus.setEnabled(False)
+        self.workerfee.setEnabled(False)
+        self.healthfee.setEnabled(False)
+        self.dayoff.setEnabled(False)
+        self.borrow.setEnabled(False)
+        self.mealcall.setEnabled(False)
+        self.otherminus.setEnabled(False)
+        self.normaltotal.setEnabled(False)
+        self.normalfirstovertime.setEnabled(False)
+        self.normalsecondovertime.setEnabled(False)
+        self.saturdayovertime.setEnabled(False)
+        self.specialovertime.setEnabled(False)
+        self.sundayovertime.setEnabled(False)
+        self.normalovertime_meals.setEnabled(False)
+        self.saturdayovertime_meals.setEnabled(False)
+        self.specialovertime_meals.setEnabled(False)
+        self.sundayfovertime_meals.setEnabled(False)
+        self.overtimeother.setEnabled(False)
+        self.overtimetotal.setEnabled(False)
+    def account_button_disable(self):
+        self.pushButton_4.setEnabled(False)
+        self.pushButton_5.setEnabled(False)
+        self.pushButton_6.setEnabled(False)
+
+#default setting when open App
+    def default_set(self):
+        #info
+        self.info_disable()
+        self.pushButton_2.setEnabled(False)
+        #Account
+        self.account_disable()
+        self.account_button_disable()
 
     def undoview_clicked(self, QModelIndex):
         self.model.click_emp.connect(self.info_change)
         self.controller.undoview_clicked(QModelIndex.row())
-        self.Ui_setting(self)
+        self.undoclick_setting(self)
+        self.account_guide_checked(QModelIndex)
     def info_change(self, dict_empdata):
         #basic_set
         self.eid.setText(dict_empdata['eid'])
@@ -761,19 +838,14 @@ class MainView(QtWidgets.QMainWindow):
         self.sundayfovertime_meals.setText(str(dict_empdata['sundayfovertime_meals']))
         self.overtimeother.setText(str(dict_empdata['overtimeother']))
         self.overtimetotal.setText(str(dict_empdata['overtimetotal']))
-
-        
+     
     def infodata_edit_clicked(self):
         self.model.info_edit_click.connect(self.infodata_editable)
         self.controller.infodata_edit_clicked()
     def infodata_editable(self):
-        self.eid.setEnabled(True)
-        self.eproperty.setEnabled(True)
-        self.ename.setEnabled(True)
-        self.seniority.setEnabled(True)
-        self.spectialdayoff.setEnabled(True)
-        self.basicsalary_2.setEnabled(True)
-
+        self.info_able()
+        self.pushButton_2.setEnabled(True)
+        self.account_disable()
 
     def infodata_done_clicked(self):
         try:
@@ -795,9 +867,22 @@ class MainView(QtWidgets.QMainWindow):
         #不用messagebox, 用label顯示 尚未處理
         QtWidgets.QMessageBox.information(self, '修改成功', '%s 已更新資料'%eid_data)
         self.basicsalary.setText(self.basicsalary_2.text())
-        self.Ui_setting(self)
+        self.controller.show_undoview()
+        self.undoclick_setting(self)
 
-
+    def account_guide_checked(self, QModelIndex):
+        self.model.account_guide_signal.connect(self.button_guide)
+        self.controller.account_guide_checked(QModelIndex.row())
+        self.model.account_guide_signal.disconnect(self.button_guide)
+    def button_guide(self,salaryischecked):
+        if salaryischecked == '0':
+            self.account_able()
+            self.pushButton_6.setEnabled(True)
+        if salaryischecked == '1':
+            self.pushButton_4.setEnabled(True)
+            self.pushButton_5.setEnabled(True)
+            self.pushButton_6.setEnabled(True)
+    #試算button
     def accountdata_clicked(self):
         self.model.accountdata_click.connect(self.update_accountdata)
         try:
@@ -963,15 +1048,19 @@ class MainView(QtWidgets.QMainWindow):
         self.new_emp_window.show()
     #依照該button對應event進行connect (各事件再處理與controller的互動，這邊只是連接畫面跟事件觸及)
     def attachcontroller(self):
-        
+        #listview activate
         self.undoview.clicked.connect(self.undoview_clicked)
         self.undoview.activated.connect(self.undoview_clicked)
+        #infodata page
         self.pushButton.clicked.connect(self.infodata_edit_clicked)
         self.pushButton_2.clicked.connect(self.infodata_done_clicked)        
-        self.pushButton_3.clicked.connect(self.accountdata_clicked)
+        #account page
+        #self.pushButton_3.clicked.connect(self.accountdata_clicked)
         self.pushButton_4.clicked.connect(self.delete_account_clicked)
         self.pushButton_5.clicked.connect(self.preview_word)
         self.pushButton_6.clicked.connect(self.create_account_clicked)
+        
+        #new emp page
         self.actionnew.triggered.connect(self.newemp)
 
         

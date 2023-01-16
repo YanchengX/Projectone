@@ -93,30 +93,30 @@ System design:
 
 電子化系統操作步驟:
 
-main page
+#main page
     a.
     開始系統時可點擊or point enter listview來查看該員工基本資料頁面and薪資試算頁面
     但可輸入欄都設為disable
     a-1.
     點擊listview頁面後顯示basicinfo(diable edit) and account page(able edit)
 
-basicinfo page
+#basicinfo page
     b-1.
     調整必須點擊edit button (所以要diable done button)
     b-2.
     更改資料完畢可以點擊done button並開放account page輸入，且更改中acccount page不能做更動(diable)(防止兩邊同時操作影響底薪)
-    (發現更改名字問題setting page未refresh變動)eid,eproperty, laborpension, specialdayoff
-
+    #**(發現更改名字問題setting page未refresh變動)eid,eproperty, laborpension, specialdayoff
+        undoview 要refresh
 account page
     c
-    (照隨改隨算event)c為點擊員工後弟一個看到的狀況分為未登錄跟已登錄(直接顯示薪水)
+    #(照隨改隨算event)c為點擊員工後弟一個看到的狀況分為未登錄跟已登錄(直接顯示薪水on listview)
     一般總和，加班總和，勞退，本月薪水都為disable其餘可調整
-    c-未登錄.
-    未登入員工able(account page,create/update button)
-    c-已登錄.
-    已登錄員工able(account page, create/update button, delete button, preview button(如果尚未update就會顯示舊的))
-    
-    
+    c-未登錄(salarychecked==0).
+    未登入員工
+    able(account page,create/update button)，(check判斷要哪個button disable to click) 防呆 account-guide-check
+    c-已登錄(salarychecked==1).
+    已登錄員工
+    able(account page, create/update button, delete button, preview button(如果尚未update=(資料庫未更新)就會顯示舊的))
 
 
 月薪全勤 沒全勤
@@ -311,13 +311,35 @@ mainviewy事件處理:
         試算按鍵改成輸入按鍵(意旨打開程式時account-page都為disable，點開才開放輸入)，這時套入function進行計算
 
         將原本試算功能保留邏輯移到auto counting event 並新增自動計算
+   
+    #default_set:
+        初始畫面載入設定，將可輸入值設為disable，
+
+    account-guide-check:
+        幫助點擊員工時判斷是否新增過薪水且做按鈕防呆引導(從view-click獨立出來)
+        M-
+            依附view click時呼叫且新增引導signal做回覆與抓取qindex值，select 該員工的salary_checked，並回傳值判斷
+            c-未登錄(salarychecked==0).
+            未登入員工
+            able(account page,create/update button)
+            c-已登錄(salarychecked==1).
+            已登錄員工
+            able(account page, create/update button, delete button, preview button(如果尚未update=(資料庫未更新)就會顯示舊的))
+
+            當list點員工時，該員工按鈕狀態確定button是不是check0 or 1且跳至其他員工是也要套入狀況:
+            當員工完成更改(create or update)狀態的時候，也要啟動event，並且回復到原來狀態，
+            (設定一個原本狀態 當完成or 跳狀態直轉換到該個)，
+
+        C-
+            controller呼叫方法 參數依附view click的eid 回傳emit
+        V-
         
+            回收到的值做更改disable or able值(button Enabled())        
+
 
     rulable_event:
         遵循規律的事件安排，以防輸入錯誤，重複輸入等等進行防呆。
         M-
-
-
 
 
     (當月結算event)
@@ -335,13 +357,15 @@ undo ->
     #view-clicked 套用已新增or預設資料到account edit上
     #sumtotal Label計算總薪水 ->從list上已算出新水上抓資料相加
     #Tab按鍵順位調整，
+    #main page 可否輸入框判斷修改
 
+防呆引導按鈕限制避免err邏輯實現     1.account guide 防呆引導event
 進行更改自動計算項 (更新成隨改隨算event 取代試算event)
-防呆引導按鈕限制避免err邏輯實現
 create/update button event合併更新與新增事件
-preview_clicked 預覽成word技術 + 應用    
-當月結算event處理
 
+preview_clicked 預覽成word技術 + 應用    
+
+當月結算event處理
 
 
 -
@@ -351,6 +375,7 @@ preview_clicked 預覽成word技術 + 應用
 資料庫-總歷史資料 (待議)(時間充裕做)
 員工歷史資料     (待議)
 
+(手動viersion完成)
 
 
 ----------------------資料庫    

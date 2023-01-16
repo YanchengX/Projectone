@@ -7,6 +7,7 @@ class Model(QStringListModel):
     click_emp = pyqtSignal(dict)
     info_edit_click = pyqtSignal()
     info_done_click = pyqtSignal(str)
+    account_guide_signal = pyqtSignal(str)
     accountdata_click = pyqtSignal(list)
     create_click = pyqtSignal(str)
     delete_click = pyqtSignal(str)
@@ -77,6 +78,7 @@ class Model(QStringListModel):
             "seniority":e[3],
             "specialdayoff":e[4],
             "basicsalary":e[5],
+            #----------
             "caseid":e[6],
             "year":e[8],
             "month":e[9],
@@ -94,6 +96,7 @@ class Model(QStringListModel):
             "mealcall":e[25],
             "otherminus":e[26],
             "normaltotal":e[27],
+            #----------
             "normalfirstovertime":e[31],     
             "normalsecondovertime":e[32],
             "saturdayovertime":e[33],       
@@ -116,6 +119,7 @@ class Model(QStringListModel):
             "seniority":e[3],
             "specialdayoff":e[4],
             "basicsalary":e[5],
+            #----------
             "caseid": 0,
             "year": self.year,
             "month":self.month,
@@ -133,6 +137,7 @@ class Model(QStringListModel):
             "mealcall":0,
             "otherminus":0,
             "normaltotal":0,
+            #----------
             "normalfirstovertime":0,     
             "normalsecondovertime":0,
             "saturdayovertime":0,       
@@ -146,7 +151,12 @@ class Model(QStringListModel):
             "overtimetotal":0
         }
         self.click_emp.emit(self.data)
-        
+
+    def account_guide_checked(self, index):
+        self.idata = self.cursor.execute('SELECT basicinfo.salarychecked FROM basicinfo WHERE basicinfo.eid =:eid',{'eid':self.infodata[index][0]})
+        self.checked =  self.idata.fetchone()
+        self.account_guide_signal.emit(str(self.checked[0]))
+
     def infodata_edit_clicked(self):
         self.info_edit_click.emit()
     
@@ -320,3 +330,5 @@ class Model(QStringListModel):
 
     def get_date(self):
         self.date_signal.emit([self.year, self.month])
+
+        
