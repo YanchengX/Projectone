@@ -173,11 +173,11 @@ widget
 # ->done
 
 mainviewy事件處理:
-
     #show_undoview:
         列表undo listview 顯示還未登記薪資的員工
         method:
             basicinfo -> salarychecked = 0  (False 尚未新增該月該員工月薪)
+
 
     #undoview_clicked:
         當undoview員工被點擊，跑對應數值到該mainview所有對應line-edit上 可開始修改
@@ -193,18 +193,21 @@ mainviewy事件處理:
         #尚未對應已經新增的值當click時所該值對應到line-edit上
         #尚未對應還未新增的值當click時default值對應到line-edit
 
+
     #infodata_edit_clicked:
         基本資料修改按鈕，原本基本資料為disable不可更改的，按下編輯按鍵可以開放更改，再按一次無效
         info_edit_click pysignal不回傳值 單純點擊事件 切換listview員工時再度disabled
 
         #暫定修改infoedit新增時間性的修改成功label -> 改為qbox更改成功infomation
     
+
     #infodata_done_clicked:
         基本資料完成按鈕，當被點擊儲存當前設定並分配好對應型態回到DB，並將line-edit改回disable
         info_done_click pysignal(list)並設定回DB型態，依照eid的text對應db + 該eid data eid做update 如果eid為eid(default)預設值就跳errorr
         先從view抓數值回去model model do update 回傳emit(對應data)，(qt會隨著使用者輸入line edit跟著變動text值)
         DB更改之後未作新渲染，所以要利用emit回傳信號給view，重新更新一次infodata(select)就會更新渲染畫面。
-    
+
+
     #account_and_edit_clicked:
         試算修改按鈕，ACCount表格輸入完畢時可以按鈕幫忙計算不須手動計算的按鈕並可提供修改(不設定disable)
         model建立所以需要的變數26項，並配置對應自動計算格上，傳遞資料來完成計算。但還不做DB操作
@@ -224,11 +227,14 @@ mainviewy事件處理:
         -> total 隨項改方法
         (暫不處理)
 
+
     #getdate:
         獲得日期方法，並做年數遞增跟月份判斷(自己預設初始值)    
 
-    #)create_account_clicked:
-        新增試算按鈕，連動listview 當(無錯誤輸入)則進行DB處理(input薪水+checked判斷)並重新刷新listview(show view)
+
+    #create_account_clicked:
+        v0:新增試算按鈕，連動listview 當(無錯誤輸入)則進行DB處理(input薪水+checked判斷)並重新刷新listview(show view)
+        v1:如果新增過後又click button可以做update input DB process 並重複動作
         model:
             model 分別做DB儲存 然後跟listview一樣的形式並加上(薪水 + checked已計算 (join eventdata))
             DB -> 新增一次 需分辨唯一(eid + year + month)除非刪除後再新增
@@ -246,6 +252,7 @@ mainviewy事件處理:
             如果已登錄(salary_checked = T) 就顯示salary(from eventdata)
             如果未登錄就(return '未登錄')
 
+
     #delete_account_clicked:
         在listview 選擇員工後並按下刪除按鈕後成立，未新增該月薪水的員工就防呆error
         signal -> delete_click return 該eid 
@@ -257,6 +264,8 @@ mainviewy事件處理:
             最後messagebox出已刪除
             ->並更新account回到預設值
             #account-detail item refresh
+
+
     #sumtotal:
         計算員工總新水，跟(show)listview抓資料把已新增的薪水相加，listview刷新時每次都會呼叫sum
         
@@ -269,6 +278,7 @@ mainviewy事件處理:
         #2更動時跟著計算 ->(新增或刪除時呼叫並渲染label跟存入數值)
         採2方法
 
+
     #listview_clicked2:
 
         當點到listview時，如果已新增過薪水的話就讓account顯示已經登記過的資料到line上，反之則顯示(default)(0)並可以開始輸入
@@ -277,7 +287,97 @@ mainviewy事件處理:
         view -> 接收該qindex，並給該eid，然後在更新畫面到account上，
         預設與新增過的判斷式為eventdata有沒有該事件，如果用basicinfo其實沒有該員工問題就不會顯示在listview上，所以用event代表新增
 
-    (50%)
+
+    #default_set:
+        初始畫面載入設定，將可輸入值設為disable，
+
+
+    #account-guide-check:
+        幫助點擊員工時判斷是否新增過薪水且做按鈕防呆引導(從view-click獨立出來)
+        account guide check base on listview clicked當下做動
+        M-
+            依附view click時呼叫且新增引導signal做回覆與抓取qindex值，select 該員工的salary_checked，並回傳值判斷
+            c-未登錄(salarychecked==0).
+            able(account page,create/update button)
+            c-已登錄(salarychecked==1).
+            able(account page, create/update button, delete button, preview button(如果尚未update=(資料庫未更新)就會顯示舊的))
+
+            click list view選擇員工時(該表is clicked) 然後對照click到的員工做salarychecked對應做切換，*如果都沒有選擇員工時就是
+            default disable
+        C-
+            controller呼叫方法 參數依附view click的eid 回傳emit
+        V-
+        
+            回收到的值做更改disable or able值(button Enabled())
+            (切換狀況):
+            a.尚未click點到任何一員工:
+                切換到該員工checked狀態0 (update/create) ,1 (delete,preview,update/create)
+            b.已登錄員工跳至尚未登錄員工:
+                able item to disable (delete,preview) - disable item to able (None but update/create non-change)
+            c.未登錄員工跳至已登錄員工:
+                able item to disable (None but update/create non-change) - disable item to able (delete, preview)
+
+            成功更新變成0,1時要從新判斷該salarychecked同時切換按鈕able/disabl否則會誤按
+            (delete/create)會影響到
+            ------------------------------
+            account-edit able and disable
+            -
+            info-edit able and disable
+            -
+            account and info button able and disable
+            -----------------------------
+
+
+    #auto_counting_event:
+        使用者計算右側account page時輸入完數字且tab到下個數字時(或不規則輸入)，自動計算項已經計算完
+        
+        list-view 被點擊時 account-page顯示試算資料(未登錄=0已登錄=DBdata)
+        未登錄計算時，自動計算項(全勤，勞健保(able)，一般and加班總合，勞退 總薪水(disable))
+        
+        (able logic，且可自由更改)
+        全勤 => 請假=0就計算
+        勞健保 => 基本底薪*參數
+        
+        (disable logic)
+        其餘參數輸入過後跳往其他linetext時進行計算
+        一般總和 => 基本底薪+一般項，假設其中一個linetext更動時就update一般總和，第一次點擊員工時先執行一次
+        加班總和 => 加班項其中一個linetext更動時update加班總和，第一次點擊員工執行一次
+        本月薪水 => 一般and加班有變動時就更新
+        text-valuechanged function處理變更時refresh sum
+
+        function可放在兩種方案
+        v1.
+        app打開來listview點選員工時(click_emp)->順勢呼叫+connect valuechanged
+        2.
+        試算按鍵改成輸入按鍵(意旨打開程式時account-page都為disable，點開才開放輸入)，這時套入function進行計算
+
+        將原本account試算功能保留邏輯移到auto counting event 並新增自動計算
+
+        M ->
+            回收dictionary-data 做邏輯加總，一般項的總和emit 跟加班項的emit 最後總薪水emit
+            try防呆是否為數值 false就不做計算(or 總計顯示err)
+            
+            假設auto-count item被手動計算，那就再放回總數。
+
+            (solve)重複輸入時會重複計算bug
+        V ->
+            當view is click 啟動
+            auto-counting -> all line-edit textchanged connect -> account-function
+            accout-function:
+                dictionary data(所有加總) to controller
+                self.model.信號連接.(sum_change)
+            sum_change:
+                line-edit .變更emit綁定的資訊
+            進行delete時auto-count 無法歸零是因為basicsalary!=0 所已經幫忙計算(不會影響邏輯)
+            bug -> able調整項邏輯輸入設定 -> (或直接變為disable)
+        C->
+            連接M and V橋梁，傳遞dictionary-data
+
+
+    list-view-unclick-default:
+        當create or delete完成時，list-view會回到unclick狀態 這時候將info, account and all button改為預設值
+
+
     preview_clicked:
         預覽按鈕，當被clicked時，line-edit上的值傳入格式並出產到word預覽，
         M-
@@ -290,85 +390,36 @@ mainviewy事件處理:
         C-
             preview連接view傳給model input進來的資料
 
-    auto_counting_event:
-        使用者計算右側account page時輸入完數字且tab到下個數字時(或不規則輸入)，自動計算項已經計算完
-        
-        list-view 被點擊時 account-page顯示試算資料(未登錄=0已登錄=DBdata)
-        未登錄計算時，自動計算項(全勤，勞健保(able)，一般加班總合，勞退 總薪水(disable))
-        (able logic，且可自由更改)
-        全勤 => 請假=0就計算
-        勞健保 => 基本底薪*參數
-        (disable邏輯)
-        其餘參數輸入過後跳往其他linetext時進行計算
-        一般總和 => 基本底薪+一般項，假設其中一個linetext更動時就update一般總和，第一次點擊員工時先執行一次
-        加班總和 => 加班項其中一個linetext更動時update加班總和，第一次點擊員工執行一次
-        本月薪水 => 一般and加班有變動時就更新
-        text-valuechanged function處理變更時refresh sum
-        function可放在兩種方案
-    v   1.
-        app打開來listview點選員工時(click_emp)->順勢呼叫+connect valuechanged
-        2.
-        試算按鍵改成輸入按鍵(意旨打開程式時account-page都為disable，點開才開放輸入)，這時套入function進行計算
 
-        將原本試算功能保留邏輯移到auto counting event 並新增自動計算
-   
-    #default_set:
-        初始畫面載入設定，將可輸入值設為disable，
-
-    account-guide-check:
-        幫助點擊員工時判斷是否新增過薪水且做按鈕防呆引導(從view-click獨立出來)
-        M-
-            依附view click時呼叫且新增引導signal做回覆與抓取qindex值，select 該員工的salary_checked，並回傳值判斷
-            c-未登錄(salarychecked==0).
-            未登入員工
-            able(account page,create/update button)
-            c-已登錄(salarychecked==1).
-            已登錄員工
-            able(account page, create/update button, delete button, preview button(如果尚未update=(資料庫未更新)就會顯示舊的))
-
-            當list點員工時，該員工按鈕狀態確定button是不是check0 or 1且跳至其他員工是也要套入狀況:
-            當員工完成更改(create or update)狀態的時候，也要啟動event，並且回復到原來狀態，
-            (設定一個原本狀態 當完成or 跳狀態直轉換到該個)，
-
-        C-
-            controller呼叫方法 參數依附view click的eid 回傳emit
-        V-
-        
-            回收到的值做更改disable or able值(button Enabled())        
-
-
-    rulable_event:
-        遵循規律的事件安排，以防輸入錯誤，重複輸入等等進行防呆。
-        M-
-
-
-    (當月結算event)
     closed_Account:
+    (當月結算event)
         該月薪資結算並將資料更新到下個月份以及調整DB內容等等。
- 
+        年份月份更新，salarychecked都歸0，
+
 
     new_emp_view    
-
     value_set_view 
 
 undo ->
+
     #員工編輯完成,刪除acc,新增error作qmesbox提示使用者
     #account預設畫面調整
     #view-clicked 套用已新增or預設資料到account edit上
     #sumtotal Label計算總薪水 ->從list上已算出新水上抓資料相加
     #Tab按鍵順位調整，
     #main page 可否輸入框判斷修改
-
-防呆引導按鈕限制避免err邏輯實現     1.account guide 防呆引導event
-進行更改自動計算項 (更新成隨改隨算event 取代試算event)
+    #防呆引導按鈕限制避免err邏輯實現     
+        #1.account guide 防呆引導event
+        #2.info page guide check
+        #3.更新or刪除完view會跳回到unclick,回預設button設定
+    #進行更改自動計算項 (更新成隨改隨算event 取代試算event)
+    
 create/update button event合併更新與新增事件
-
 preview_clicked 預覽成word技術 + 應用    
-
 當月結算event處理
 
-
--
+undo subclass ->
+--------------------------
     #子畫面view呼叫triggered -> menubar
 新增刪除員工view完成 ->new_emp_clicked新增刪除員工in DB
 設定-參數設定窗value_set_view   -> done_clicked 
@@ -376,6 +427,11 @@ preview_clicked 預覽成word技術 + 應用
 員工歷史資料     (待議)
 
 (手動viersion完成)
+
+
+
+
+
 
 
 ----------------------資料庫    
@@ -460,3 +516,33 @@ key編號
 開門50，
 全勤1000，
 責任1000
+
+
+normalmeals
+openbouns
+responsiblebouns
+otherplus
+dayoff
+borrow
+mealcall  
+otherminus 
+#-------normal
+normalfirstovertime
+normalsecondovertime
+normalovertime_meals
+saturdayovertime
+saturdayovertime_meals
+sundayovertime
+sundayfovertime_meals
+specialovertime
+specialovertime_meals
+overtimeother 
+#-------ovetime
+allrbouns
+workerfee
+healthfee
+normaltotal
+overtimetotal
+laborpension
+total_salary
+    #-------autoItem

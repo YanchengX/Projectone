@@ -39,4 +39,6 @@ class MainController(QObject):
     def get_date(self):
         self.model.get_date()
 
+    def autocount(self, sum_data):
+        self.model.autocount(sum_data)
 

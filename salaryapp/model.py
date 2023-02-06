@@ -8,12 +8,12 @@ class Model(QStringListModel):
     info_edit_click = pyqtSignal()
     info_done_click = pyqtSignal(str)
     account_guide_signal = pyqtSignal(str)
-    accountdata_click = pyqtSignal(list)
     create_click = pyqtSignal(str)
     delete_click = pyqtSignal(str)
     preview_click = pyqtSignal(list)
     date_signal = pyqtSignal(list)
     sumtotalsignal = pyqtSignal(str)
+    auto_count_value = pyqtSignal(dict)
 
     def __init__(self):
         super(Model, self).__init__()
@@ -22,8 +22,8 @@ class Model(QStringListModel):
         self.cursor.execute('SELECT * FROM basicinfo WHERE 1')
         self.infodata = self.cursor.fetchall()
         
-        #account 變數用accountlistdata包含在內        
-        self.accountlistdata = None
+        #account 變數用sumdata包含在內        
+        self.d = None
         
         self.caseid = 0
         #year,month
@@ -41,6 +41,7 @@ class Model(QStringListModel):
         self.meal_value = 60
         self.overtime1 = 1/8/30*1.34
         self.overtime2 = 1/8/30*1.67
+        
         
     def show_undoview(self):
         self.strdata = []
@@ -60,6 +61,7 @@ class Model(QStringListModel):
 
             self.strdata.append(tmp)
         self.setStringList(self.strdata)
+
 
     def undoview_clicked(self, index):
         self.test = self.cursor.execute("SELECT eid FROM eventdata WHERE eid=:eid AND year = :year AND month = :month",{  'eid':self.infodata[index][0],  'year':self.year,  'month':self.month})
@@ -152,14 +154,17 @@ class Model(QStringListModel):
         }
         self.click_emp.emit(self.data)
 
+
     def account_guide_checked(self, index):
         self.idata = self.cursor.execute('SELECT basicinfo.salarychecked FROM basicinfo WHERE basicinfo.eid =:eid',{'eid':self.infodata[index][0]})
         self.checked =  self.idata.fetchone()
         self.account_guide_signal.emit(str(self.checked[0]))
 
+
     def infodata_edit_clicked(self):
         self.info_edit_click.emit()
-    
+
+
     def infodata_done_clicked(self, listinfodata):
         self.cursor.execute("UPDATE basicinfo SET eproperty=:eproperty, ename=:ename, seniority=:seniority, spectialdayoff=:spectialdayoff, basicsalary=:basicsalary WHERE eid =:eid"
         ,{
@@ -176,50 +181,7 @@ class Model(QStringListModel):
         self.infodata = self.cursor.fetchall()
         # self.returndata = [eid,eproperty,ename,seniority,spectialdayoff,basicsalary]
         self.info_done_click.emit(listinfodata[0])
-    
-    def accountdata_clicked(self, accountlistdata):
 
-        #model 處理auto試算邏輯 但不接觸DB
-        self.accountlistdata = accountlistdata
-        #auto
-        self.accountlistdata[19] = self.allrbouns_value if self.accountlistdata[5] == 0 else 0
-        self.accountlistdata[20] = math.ceil(self.accountlistdata[0] * self.workerfee_rate)
-        self.accountlistdata[21] = math.ceil(self.accountlistdata[0] * self.healthfee_rate)
-        #nomal
-        self.accountlistdata[1]*= self.meal_value
-        self.accountlistdata[2]*= self.openbouns_value
-        self.accountlistdata[3]*= self.responsiblebouns_value
-        self.accountlistdata[5]*= math.ceil(self.accountlistdata[0]/30/8)
-        self.accountlistdata[7]*= self.meal_value
-        #overtime
-        self.accountlistdata[9]*= math.ceil(self.accountlistdata[0]*self.overtime1)
-        self.accountlistdata[10]*= math.ceil(self.accountlistdata[0]*self.overtime2) 
-        self.accountlistdata[11]*= self.meal_value
-        self.accountlistdata[12] = self.accountlistdata[12] * (math.ceil(self.accountlistdata[0]*self.overtime1) * 2 + math.ceil(self.accountlistdata[0]*self.overtime2) * 6)
-        self.accountlistdata[13]*= self.meal_value
-        self.accountlistdata[14] = self.accountlistdata[14] * (math.ceil(self.accountlistdata[0]*self.overtime1) * 2 + math.ceil(self.accountlistdata[0]*self.overtime2) * 6)
-        self.accountlistdata[15]*= self.meal_value   
-        self.accountlistdata[16] = self.accountlistdata[16] * (math.ceil(self.accountlistdata[0]*self.overtime1) * 2 + math.ceil(self.accountlistdata[0]*self.overtime2) * 6)
-        self.accountlistdata[17]*= self.meal_value
-        # total 
-        tmp = 0
-        for i in range(0,5):
-            tmp += self.accountlistdata[i]
-        for i in range(5,9):
-            tmp -= self.accountlistdata[i]
-        self.accountlistdata[22] = tmp + self.accountlistdata[19] -self.accountlistdata[20] - self.accountlistdata[21]
-        tmp = 0
-        for i in range(9,19):
-            tmp += self.accountlistdata[i]
-        self.accountlistdata[23] = tmp 
-        #self.accountlistdata[23] 9~18 
-        self.accountlistdata[24] = round(self.accountlistdata[0] * 0.06)
-        self.accountlistdata[25] = self.accountlistdata[22] + self.accountlistdata[23]
-        
-        self.autodata = []
-        for i in range(19,26):
-            self.autodata.append(self.accountlistdata[i])
-        self.accountdata_click.emit(self.autodata)
 
     def create_account_clicked(self, dictdata):
         
@@ -285,6 +247,7 @@ class Model(QStringListModel):
             })
             self.conn.commit()
 
+
     def delete_account_clicked(self,dictdata):
         try:
             self.cursor.execute("UPDATE basicinfo SET salarychecked = 0 WHERE eid = :eid",{'eid':dictdata['eid']})
@@ -311,6 +274,7 @@ class Model(QStringListModel):
         except ValueError as e:
             print(e)
 
+
     def sumtotal(self):
         self.totalpay = 0
         self.total =  self.cursor.execute("SELECT total_salary FROM eventdata WHERE year = :year and month = :month"
@@ -324,11 +288,59 @@ class Model(QStringListModel):
         self.salary = format(self.totalpay,',')
         self.sumtotalsignal.emit(self.salary)
 
+
     def preview(self, eid):
         self.pre = Preview(self.year, self.month, eid)
         self.preview_click.emit([eid])
 
+
     def get_date(self):
         self.date_signal.emit([self.year, self.month])
 
-        
+    #-------autoItem
+    def autocount(self, sum_data):
+        self.d = sum_data
+        #auto
+        self.d['allrbouns'] = self.allrbouns_value if self.d['dayoff'] == 0 else 0
+        self.d['workerfee'] = math.ceil(self.d['basicsalary'] * self.workerfee_rate)
+        self.d['healthfee'] = math.ceil(self.d['basicsalary'] * self.healthfee_rate)
+        #nomal
+        self.d['normalmeals']*= self.meal_value
+        self.d['openbouns']*= self.openbouns_value
+        self.d['responsiblebouns']*= self.responsiblebouns_value
+        self.d['dayoff']*= math.ceil(self.d['basicsalary']/30/8)
+        self.d['mealcall']*= self.meal_value
+        #overtime
+        self.d['normalfirstovertime']*= math.ceil(self.d['basicsalary']*self.overtime1)
+        self.d['normalsecondovertime']*= math.ceil(self.d['basicsalary']*self.overtime2) 
+        self.d['normalovertime_meals']*= self.meal_value
+        self.d['saturdayovertime'] = self.d['saturdayovertime'] * (math.ceil(self.d['basicsalary']*self.overtime1) * 2 + math.ceil(self.d['basicsalary']*self.overtime2) * 6)
+        self.d['saturdayovertime_meals']*= self.meal_value
+        self.d['sundayovertime'] = self.d['sundayovertime'] * (math.ceil(self.d['basicsalary']*self.overtime1) * 2 + math.ceil(self.d['basicsalary']*self.overtime2) * 6)
+        self.d['sundayfovertime_meals']*= self.meal_value   
+        self.d['specialovertime'] = self.d['specialovertime'] * (math.ceil(self.d['basicsalary']*self.overtime1) * 2 + math.ceil(self.d['basicsalary']*self.overtime2) * 6)
+        self.d['specialovertime_meals']*= self.meal_value
+
+        normalt = 0
+        overt = 0
+        ########
+        normalt = self.d['basicsalary'] + self.d['normalmeals'] + self.d['openbouns'] + self.d['responsiblebouns'] + self.d['otherplus'] + self.d['allrbouns'] - self.d['dayoff'] - self.d['borrow'] - self.d['mealcall'] - self.d['otherminus'] - self.d['workerfee'] - self.d['healthfee']
+        overt = self.d['normalfirstovertime'] + self.d['normalsecondovertime'] + self.d['normalovertime_meals'] + self.d['saturdayovertime'] + self.d['saturdayovertime_meals'] + self.d['sundayovertime'] + self.d['sundayfovertime_meals'] + self.d['specialovertime'] + self.d['specialovertime_meals'] + self.d['overtimeother']
+        ########
+        self.d['normaltotal'] = normalt
+        self.d['overtimetotal'] = overt
+        self.d['laborpension'] = round(self.d['basicsalary'] * 0.06)
+        self.d['total_salary'] = normalt + overt
+        #emit auto data and count
+        autodata = {
+            'all':str(self.d['allrbouns']),
+            'worker':str(self.d['workerfee']),
+            'health':str(self.d['healthfee']),
+            'normalt':str(self.d['normaltotal']),
+            'overt':str(self.d['overtimetotal']),
+            'labor':str(self.d['laborpension']),
+            'total':str(self.d['total_salary'])
+        }
+        self.auto_count_value.emit(autodata)
+
+

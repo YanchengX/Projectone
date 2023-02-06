@@ -13,6 +13,7 @@ class MainView(QtWidgets.QMainWindow):
         self.default_set()      #diable all textable
         self.get_date()
         self.sumtotal()
+        self.auto_counting_event()
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -588,7 +589,6 @@ class MainView(QtWidgets.QMainWindow):
         MainWindow.setTabOrder(self.pushButton_4, self.pushButton_5)
         MainWindow.setTabOrder(self.pushButton_5, self.pushButton_6)
         MainWindow.setTabOrder(self.pushButton_6, self.pushButton_7)
-
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -703,20 +703,24 @@ class MainView(QtWidgets.QMainWindow):
         self.actionchistory.setText(_translate("MainWindow", "chistory"))
         self.actionehistory_2.setText(_translate("MainWindow", "ehistory"))
 
-#listview click guide event(prevent)
+
+    #listview click guide event(prevent)
     def undoclick_setting(self,MainWindow):
         #basic info disable
         self.info_disable()
+        self.pushButton.setEnabled(True)
         self.pushButton_2.setEnabled(False)        
         #Account-detail
         self.account_able()
 
 
+    #listview show
     def show_undoview(self):
         #view禁止點擊來編輯
         self.undoview.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.undoview.setModel(self.model)
         self.controller.show_undoview()
+
 
     #防呆引導insert switch
     def info_able(self):
@@ -732,7 +736,8 @@ class MainView(QtWidgets.QMainWindow):
         self.seniority.setEnabled(False)
         self.spectialdayoff.setEnabled(False)
         self.basicsalary.setEnabled(False)
-        self.basicsalary_2.setEnabled(False)    
+        self.basicsalary_2.setEnabled(False)
+        self.pushButton.setEnabled(False)
     def account_able(self):
         self.normalmeals.setEnabled(True)
         self.allrbouns.setEnabled(True)
@@ -786,7 +791,8 @@ class MainView(QtWidgets.QMainWindow):
         self.pushButton_5.setEnabled(False)
         self.pushButton_6.setEnabled(False)
 
-#default setting when open App
+
+    #default setting when open App
     def default_set(self):
         #info
         self.info_disable()
@@ -795,11 +801,13 @@ class MainView(QtWidgets.QMainWindow):
         self.account_disable()
         self.account_button_disable()
 
+
+    #listview click
     def undoview_clicked(self, QModelIndex):
         self.model.click_emp.connect(self.info_change)
         self.controller.undoview_clicked(QModelIndex.row())
         self.undoclick_setting(self)
-        self.account_guide_checked(QModelIndex)
+        self.account_guide_checked(QModelIndex.row())
     def info_change(self, dict_empdata):
         #basic_set
         self.eid.setText(dict_empdata['eid'])
@@ -838,7 +846,9 @@ class MainView(QtWidgets.QMainWindow):
         self.sundayfovertime_meals.setText(str(dict_empdata['sundayfovertime_meals']))
         self.overtimeother.setText(str(dict_empdata['overtimeother']))
         self.overtimetotal.setText(str(dict_empdata['overtimetotal']))
-     
+
+
+    #一般資訊編輯click
     def infodata_edit_clicked(self):
         self.model.info_edit_click.connect(self.infodata_editable)
         self.controller.infodata_edit_clicked()
@@ -847,6 +857,8 @@ class MainView(QtWidgets.QMainWindow):
         self.pushButton_2.setEnabled(True)
         self.account_disable()
 
+
+    #一般資訊完成click
     def infodata_done_clicked(self):
         try:
             self.model.info_done_click.connect(self.update_infodata)
@@ -863,6 +875,7 @@ class MainView(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.information(self, '發生錯誤', '檢查是否已點擊員工或輸入錯誤')
         finally:
             self.model.info_done_click.disconnect(self.update_infodata)
+            self.account_disable()
     def update_infodata(self, eid_data):
         #不用messagebox, 用label顯示 尚未處理
         QtWidgets.QMessageBox.information(self, '修改成功', '%s 已更新資料'%eid_data)
@@ -870,67 +883,26 @@ class MainView(QtWidgets.QMainWindow):
         self.controller.show_undoview()
         self.undoclick_setting(self)
 
-    def account_guide_checked(self, QModelIndex):
+
+    #試算表引導button event
+    def account_guide_checked(self, Index):
         self.model.account_guide_signal.connect(self.button_guide)
-        self.controller.account_guide_checked(QModelIndex.row())
+        self.controller.account_guide_checked(Index)
         self.model.account_guide_signal.disconnect(self.button_guide)
     def button_guide(self,salaryischecked):
         if salaryischecked == '0':
             self.account_able()
+            #4,5,6 delete,preview,update/create
+            self.pushButton_4.setEnabled(False)
+            self.pushButton_5.setEnabled(False)
             self.pushButton_6.setEnabled(True)
         if salaryischecked == '1':
             self.pushButton_4.setEnabled(True)
             self.pushButton_5.setEnabled(True)
             self.pushButton_6.setEnabled(True)
-    #試算button
-    def accountdata_clicked(self):
-        self.model.accountdata_click.connect(self.update_accountdata)
-        try:
-            self.listdata = [
-            int(self.basicsalary.text()),
-            int(self.normalmeals.text()),
-            int(self.openbouns.text()),
-            int(self.responsiblebouns.text()),
-            int(self.otherplus.text()),
-            int(self.dayoff.text()),
-            int(self.borrow.text()),
-            int(self.mealcall.text()),
-            int(self.otherminus.text()), 
-            #-------normal
-            int(self.normalfirstovertime.text()),
-            int(self.normalsecondovertime.text()),
-            int(self.normalovertime_meals.text()),
-            int(self.saturdayovertime.text()),
-            int(self.saturdayovertime_meals.text()),
-            int(self.sundayovertime.text()),
-            int(self.sundayfovertime_meals.text()),
-            int(self.specialovertime.text()),
-            int(self.specialovertime_meals.text()),
-            int(self.overtimeother.text()),
-            #-------ovetime
-            int(self.allrbouns.text()),
-            int(self.workerfee.text()),
-            int(self.healthfee.text()),
-            int(self.normaltotal.text()),
-            int(self.overtimetotal.text()),
-            int(self.laborpension.text()),
-            int(self.total_salary.text()),    
-            #-------autoItem        
-            ]
-            self.controller.accountdata_clicked(self.listdata)
-            self.model.accountdata_click.disconnect(self.update_accountdata)
-        except:
-            QtWidgets.QMessageBox.information(self, '輸入錯誤', '不可輸入非數字')
-    def update_accountdata(self,listdata):
-        self.allrbouns.setText(str(listdata[0]))
-        self.workerfee.setText(str(listdata[1]))
-        self.healthfee.setText(str(listdata[2]))
-        self.normaltotal.setText(str(listdata[3]))
-        self.overtimetotal.setText(str(listdata[4]))
-        self.laborpension.setText(str(listdata[5]))
-        self.total_salary.setText(str(listdata[6]))
 
 
+    #新增更新試算表click
     def create_account_clicked(self):
         self.model.create_click.connect(self.addtodoneview)
         self.data = {
@@ -972,10 +944,15 @@ class MainView(QtWidgets.QMainWindow):
         self.controller.create_account_clicked(self.data)
         self.controller.show_undoview()
         self.model.create_click.disconnect(self.addtodoneview)
+        
+        self.account_guide_checked(1)
+        self.default_set()
         self.sumtotal()
     def addtodoneview(self,strdata):
         QtWidgets.QMessageBox.information(self, '新增失敗', '重複新增%s的薪水，請進行修改或刪除重試'%strdata)
 
+
+    #刪除試算表click
     def delete_account_clicked(self):
         self.model.delete_click.connect(self.delete_info)
         self.data = {
@@ -986,6 +963,8 @@ class MainView(QtWidgets.QMainWindow):
         self.controller.delete_account_clicked(self.data)
         self.controller.show_undoview()
         self.model.delete_click.disconnect(self.delete_info)
+        self.account_guide_checked(0)
+        self.default_set()
         self.sumtotal()
     def delete_info(self,eid):
         self.info = '%s 資料已經被刪除'%eid
@@ -1018,6 +997,7 @@ class MainView(QtWidgets.QMainWindow):
         self.overtimetotal.setText('0')
 
 
+    #word預覽click
     def preview_word(self):
         self.model.preview_click.connect(self.wordshow)
         self.input = {
@@ -1025,10 +1005,11 @@ class MainView(QtWidgets.QMainWindow):
         }
         self.controller.preview_clicked(self.input)
         self.model.preview_click.disconnect(self.wordshow)
-        
-    def wordshow(self,emp_info):
+    def wordshow(self, emp_info):
         pass
 
+
+    #總薪資in label
     def sumtotal(self):
         self.model.sumtotalsignal.connect(self.sum_refresh)
         self.controller.sumtotal()
@@ -1036,16 +1017,103 @@ class MainView(QtWidgets.QMainWindow):
     def sum_refresh(self,sum_salary):
         self.Totalpay.setText(sum_salary)
 
+
+    #日期
     def get_date(self):
         self.model.date_signal.connect(self.getdate)
         self.controller.get_date()
     def getdate(self,yandm):
         self.year.setText(str(yandm[0]))
         self.month.setText(str(yandm[1]))
+    
 
+    #line-edit連結textchange event
+    def auto_counting_event(self):
+        #normal
+        self.normalmeals.textEdited.connect(self.sumhandle)
+        self.openbouns.textEdited.connect(self.sumhandle)
+        self.responsiblebouns.textChanged.connect(self.sumhandle)
+        self.otherplus.textChanged.connect(self.sumhandle)
+        self.dayoff.textChanged.connect(self.sumhandle)
+        self.borrow.textChanged.connect(self.sumhandle)
+        self.mealcall.textChanged.connect(self.sumhandle)
+        self.otherminus.textChanged.connect(self.sumhandle)
+        
+        #overtime
+        self.normalfirstovertime.textChanged.connect(self.sumhandle)
+        self.normalsecondovertime.textChanged.connect(self.sumhandle)
+        self.normalovertime_meals.textChanged.connect(self.sumhandle)
+        self.saturdayovertime.textChanged.connect(self.sumhandle)
+        self.saturdayovertime_meals.textChanged.connect(self.sumhandle)
+        self.sundayovertime.textChanged.connect(self.sumhandle)
+        self.sundayfovertime_meals.textChanged.connect(self.sumhandle)
+        self.specialovertime.textChanged.connect(self.sumhandle)
+        self.specialovertime_meals.textChanged.connect(self.sumhandle)        
+        self.overtimeother.textChanged.connect(self.sumhandle)
+        
+        #auto-count-item
+        self.allrbouns.textChanged.connect(self.sumhandle)
+        self.workerfee.textChanged.connect(self.sumhandle)
+        self.healthfee.textChanged.connect(self.sumhandle)
+        self.normaltotal.textChanged.connect(self.sumhandle)
+        self.overtimetotal.textChanged.connect(self.sumhandle)
+        self.laborpension.textChanged.connect(self.sumhandle)
+        self.total_salary.textChanged.connect(self.sumhandle)
+    #連結event 做dict丟入model計算
+    def sumhandle(self):
+        data = {
+            'basicsalary': int(self.basicsalary.text()),
+            'normalmeals': int(self.normalmeals.text()),
+            'openbouns':    int(self.openbouns.text()),
+            'responsiblebouns':int(self.responsiblebouns.text()),
+            'otherplus':    int(self.otherplus.text()),
+            'dayoff':       int(self.dayoff.text()),
+            'borrow':       int(self.borrow.text()),
+            'mealcall':     int(self.mealcall.text()),
+            'otherminus':   int(self.otherminus.text()), 
+            #-------normal
+            'normalfirstovertime' :int(self.normalfirstovertime.text()),
+            'normalsecondovertime':int(self.normalsecondovertime.text()),
+            'normalovertime_meals':int(self.normalovertime_meals.text()),
+            'saturdayovertime'    :int(self.saturdayovertime.text()),
+            'saturdayovertime_meals':int(self.saturdayovertime_meals.text()),
+            'sundayovertime'      :int(self.sundayovertime.text()),
+            'sundayfovertime_meals':int(self.sundayfovertime_meals.text()),
+            'specialovertime'     :int(self.specialovertime.text()),
+            'specialovertime_meals':int(self.specialovertime_meals.text()),
+            'overtimeother'       :int(self.overtimeother.text()),
+            #-------ovetime
+            'allrbouns':int(self.allrbouns.text()),
+            'workerfee':int(self.workerfee.text()),
+            'healthfee':int(self.healthfee.text()),
+            'normaltotal':int(self.normaltotal.text()),
+            'overtimetotal':int(self.overtimetotal.text()),
+            'laborpension':int(self.laborpension.text()),
+            'total_salary':int(self.total_salary.text()),
+            #-------autoItem  
+        }
+        self.model.auto_count_value.connect(self.sum_change)
+        self.controller.autocount(data)
+        self.model.auto_count_value.disconnect(self.sum_change)
+    #model計算回來emit total值
+    def sum_change(self, auto_data):
+        self.allrbouns.setText(auto_data['all'])
+        self.workerfee.setText(auto_data['worker'])
+        self.healthfee.setText(auto_data['health'])
+        self.normaltotal.setText(auto_data['normalt'])
+        self.overtimetotal.setText(auto_data['overt'])
+        self.laborpension.setText(auto_data['labor'])
+        self.total_salary.setText(auto_data['total'])
+
+
+#-----------------------------------------------------
+#sub view
+    
     def newemp(self):
         self.new_emp_window = New_emp()
         self.new_emp_window.show()
+
+
     #依照該button對應event進行connect (各事件再處理與controller的互動，這邊只是連接畫面跟事件觸及)
     def attachcontroller(self):
         #listview activate
@@ -1062,5 +1130,3 @@ class MainView(QtWidgets.QMainWindow):
         
         #new emp page
         self.actionnew.triggered.connect(self.newemp)
-
-        
