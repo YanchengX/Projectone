@@ -14,6 +14,7 @@ class Model(QStringListModel):
     date_signal = pyqtSignal(list)
     sumtotalsignal = pyqtSignal(str)
     auto_count_value = pyqtSignal(dict)
+    closeAccount = pyqtSignal(str)
 
     def __init__(self):
         super(Model, self).__init__()
@@ -30,8 +31,6 @@ class Model(QStringListModel):
         self.year = 2022
         self.month = 10
         
-        self.totalpay = 0
-
         #normal_value參數
         self.workerfee_rate = 0.115 * 0.2
         self.healthfee_rate = 0.0517 * 0.3
@@ -184,20 +183,68 @@ class Model(QStringListModel):
 
 
     def create_account_clicked(self, dictdata):
-        
+        #find all event
         self.tmp = self.cursor.execute("SELECT eventdata.caseid, eventdata.eid, eventdata.year, eventdata.month FROM eventdata WHERE 1")
         self.eventdata = self.tmp.fetchall()
+        
+        #caseid logic
         item = self.eventdata[len(self.eventdata)-1][0] if self.eventdata else 0
         self.caseid = item
         self.count = 0
+        
         for item in self.eventdata:
+            #update
             if dictdata["eid"] in item and str(self.year) in item and str(self.month) in item:
-                self.create_click.emit(dictdata['eid'])
+                #event normal overtime\
+                self.cursor.execute("UPDATE eventdata SET total_salary = :total_salary ,laborpension = :laborpension WHERE eid = :eid and year = :year and month = :month",
+                {
+                    "eid":dictdata["eid"],
+                    "year":dictdata["year"],
+                    "month":dictdata["month"],
+                    "total_salary":dictdata["total_salary"],
+                    "laborpension":dictdata["laborpension"]
+                })
+                self.cursor.execute("UPDATE normal SET normalmeals = :normalmeals, allrbouns = :allrbouns, openbouns = :openbouns, responsiblebouns = :responsiblebouns, otherplus = :otherplus, workerfee = :workerfee, healthfee = :healthfee, dayoff = :dayoff, borrow = :borrow, mealcall = :mealcall, otherminus = :otherminus, normaltotal = :normaltotal WHERE eid = :eid and year = :year and month = :month",
+                {
+                    "eid":dictdata["eid"],
+                    "year":dictdata["year"],
+                    "month":dictdata["month"],
+                    "normalmeals":dictdata["normalmeals"],
+                    "allrbouns":dictdata["allrbouns"],
+                    "openbouns":dictdata["openbouns"],
+                    "responsiblebouns":dictdata["responsiblebouns"],
+                    "otherplus":dictdata["otherplus"],
+                    "workerfee":dictdata["workerfee"],
+                    "healthfee":dictdata["healthfee"],
+                    "dayoff":dictdata["dayoff"],
+                    "borrow":dictdata["borrow"],
+                    "mealcall":dictdata["mealcall"],
+                    "otherminus":dictdata["otherminus"],
+                    "normaltotal":dictdata["normaltotal"],
+                    })
+                self.cursor.execute("UPDATE overtime SET normalfirstovertime = :normalfirstovertime, normalsecondovertime = :normalsecondovertime, saturdayovertime = :saturdayovertime, specialovertime = :specialovertime, sundayovertime = :sundayovertime, normalovertime_meals = :normalovertime_meals, saturdayovertime_meals = :saturdayovertime_meals, specialovertime_meals = :specialovertime_meals, sundayfovertime_meals = :sundayfovertime_meals, overtimeother = :overtimeother, overtimetotal = :overtimetotal  WHERE eid = :eid and year = :year and month = :month",
+                {
+                    "eid":dictdata["eid"],
+                    "year":dictdata["year"],	
+                    "month":dictdata["month"],
+                    "normalfirstovertime":dictdata["normalfirstovertime"],     
+                    "normalsecondovertime":dictdata["normalsecondovertime"],
+                    "saturdayovertime":dictdata["saturdayovertime"],
+                    "specialovertime":dictdata["specialovertime"],
+                    "sundayovertime":dictdata["sundayovertime"],
+                    "normalovertime_meals":dictdata["normalovertime_meals"],
+                    "saturdayovertime_meals":dictdata["saturdayovertime_meals"],
+                    "specialovertime_meals":dictdata["specialovertime_meals"], 
+                    "sundayfovertime_meals":dictdata["sundayfovertime_meals"],
+                    "overtimeother":dictdata["overtimeother"], 
+                    "overtimetotal":dictdata["overtimetotal"]                   
+                    })
+                self.create_click.emit(dictdata['eid'] + "".join('###'))
                 self.count += 1
                 break
         if self.count == False:
             self.caseid += 1        
-            # update salarycheckedf
+            # update salarychecked
             self.cursor.execute("UPDATE basicinfo SET salarychecked = 1 WHERE eid = :eid",{'eid':dictdata['eid']})
             #insert data
             self.cursor.execute("INSERT INTO eventdata VALUES(:caseid, :eid, :year, :month, :total_salary, :laborpension)"
@@ -245,7 +292,8 @@ class Model(QStringListModel):
                 "overtimeother":dictdata["overtimeother"], 
                 "overtimetotal":dictdata["overtimetotal"]
             })
-            self.conn.commit()
+            self.create_click.emit(dictdata['eid'])
+        self.conn.commit()
 
 
     def delete_account_clicked(self,dictdata):
@@ -290,7 +338,13 @@ class Model(QStringListModel):
 
 
     def preview(self, eid):
-        self.pre = Preview(self.year, self.month, eid)
+        self.emp = self.cursor.execute("SELECT * FROM basicinfo LEFT JOIN eventdata ON basicinfo.eid = eventdata.eid LEFT JOIN normal ON basicinfo.eid = normal.eid LEFT JOIN overtime ON basicinfo.eid = overtime.eid WHERE eventdata.year = :year AND eventdata.month = :month AND basicinfo.eid =:eid",
+        {
+            'year' : self.year,
+            'month': self.month,
+            'eid' : eid
+        })
+        self.pre = Preview(self.emp)
         self.preview_click.emit([eid])
 
 
@@ -344,3 +398,24 @@ class Model(QStringListModel):
         self.auto_count_value.emit(autodata)
 
 
+    def close_account(self):
+        #當月結算->
+        # 接收combobox年月份，對到該node如果.next = none 可以執行該event
+        # new node year and month, 
+        # db 將emp 的salarychecked 改為0 -> 需跟year, month配合 每月一個salarycheck 在搭配eid
+        # 
+        #           
+        self.closeAccount.emit('fuck')
+
+    def select_date(self):
+        pass
+
+
+
+
+
+class dataNode:
+    def __init__(self, year, month) -> None:
+        self.year = year
+        self.month = month
+        self.next = None

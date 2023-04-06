@@ -42,3 +42,8 @@ class MainController(QObject):
     def autocount(self, sum_data):
         self.model.autocount(sum_data)
 
+    def close_account(self):
+        self.model.close_account()
+
+    def select_date(self):
+        pass

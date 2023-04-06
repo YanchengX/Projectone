@@ -2,10 +2,10 @@ from docx import Document
 from docx.shared import RGBColor
 from docx.shared import Cm, Pt
 class Preview:
-    def __init__(self, year, month, eid) -> None:
-        self.year = year
-        self.month = month
-        self.eid = eid
+    def __init__(self, empdata) -> None:
+        self.empdata = empdata
+        data = self.empdata.fetchone()
+        print(data)
     # simulate doc      
         doc = Document()
         #section
@@ -77,6 +77,7 @@ class Preview:
         table_normal.cell(9,1).text = '勞保費'
         table_normal.cell(9,2).text = '0天'
         table_normal.cell(9,3).text = '0'
+        table_normal.cell(9,4).text = '應扣金額'
 
         table_normal.cell(10,1).text = '健保費'
         table_normal.cell(10,2).text = '0天'
@@ -153,6 +154,7 @@ class Preview:
         table_overtime.cell(2,1).text = '平日加班前兩小時(1.34)'
         table_overtime.cell(2,2).text = '176x15小時'
         table_overtime.cell(2,3).text = '1974'
+        table_overtime.cell(2,4).text = '應領加班薪資金額'
 
         table_overtime.cell(3,1).text = '平日加班後兩小時(1.67)'
         table_overtime.cell(3,2).text = '176x15小時'

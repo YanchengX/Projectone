@@ -231,11 +231,11 @@ mainviewy事件處理:
     #getdate:
         獲得日期方法，並做年數遞增跟月份判斷(自己預設初始值)    
 
-
-    #create_account_clicked:
+    #create_account_clicked:(update)
         v0:新增試算按鈕，連動listview 當(無錯誤輸入)則進行DB處理(input薪水+checked判斷)並重新刷新listview(show view)
         v1:如果新增過後又click button可以做update input DB process 並重複動作
         model:
+            (create)
             model 分別做DB儲存 然後跟listview一樣的形式並加上(薪水 + checked已計算 (join eventdata))
             DB -> 新增一次 需分辨唯一(eid + year + month)除非刪除後再新增
             insert -> eventdata, normal, overtime,
@@ -245,12 +245,22 @@ mainviewy事件處理:
             self.caseid = 目前(DB的)caseid長度-1
             input(薪水資料) -> DB(event,normal,overtime) 確認eventdata為唯一並insert and caseid+1
             -> DB(info) salary_checked改為True from該點觸員工eid input
-            資料連動存入 eventdata(薪資事件+薪水) + normal(一般項db) + overtime(加班項db
+            資料連動存入 eventdata(薪資事件+薪水) + normal(一般項db) + overtime(加班項db)
+            (update)
         view:
+            (create)
             對應到顯示資料showview上面的show -> strdata to show
             查basic join eventdata(當月的都會是唯一不會有狀況)
             如果已登錄(salary_checked = T) 就顯示salary(from eventdata)
             如果未登錄就(return '未登錄')
+            (update)
+
+            1.
+            button clicked if 已登錄 and 資料有更動並進行update
+            2.
+            if 已登錄但還沒input 就新create
+            3.
+            if 未登錄就default value and return view
 
 
     #delete_account_clicked:
@@ -382,25 +392,74 @@ mainviewy事件處理:
         預覽按鈕，當被clicked時，line-edit上的值傳入格式並出產到word預覽，
         M-
             model接收line-eidt值並邏輯套用呼叫word，將value帶到裡面並產表。    
-            doct(Previw)做word畫面雕刻接收(年，月，output資料(dict)，將dict數值都套上對應表格並做邊界與框架距離調整
+            doct(Previw)做word畫面雕刻接收<年，月，output資料(dict)，將dict數值都套上對應表格並做邊界與框架距離調整
             當預覽button點擊則生成word(或是直接叫做生成word檔) save.doc，生成並預覽(開啟word)->open該eid_month_year.docx(命名方式)
             signal_preview純通知該eid已生成word檔案
+            抓資料都在model 全部join包所有數值並傳輸
+            然後再丟給執行class (Preview)接收
+        Preview(docpy)-
+            拿到資料做init 並設計模板，再將數值套入，當pre_button時啟動預覽並save func
+
         V-
-            預覽按鈕連接preview 該方法connect signal(Preview)->show收訊eid以生成word input dict資料 年月連接controller
+            預覽按鈕button連接preview 該方法connect signal(Preview)->show收訊eid以生成word input dict資料 年月連接controller
         C-
             preview連接view傳給model input進來的資料
 
 
     closed_Account:
-    (當月結算event)
         該月薪資結算並將資料更新到下個月份以及調整DB內容等等。
         年份月份更新，salarychecked都歸0，
+        model-
+            回到預設值 and 預備下一個階段DB的數值:
+            __init__ 的year month 進程，當年月結算過後之回朔的closeAccount button都為disable
+            該event就把時間推進以及初始化而已。
+            如果list.next = none 就able closeAccount event
+        view-
+            reset to default view 
+            呼叫所有default set or 乾脆重新開啟
 
+    select_date:
+        一個or兩個按鈕點選顯示該月薪資檔案，以方便回朔對資料
+        model-
+            接收到view的年月 回朔到該年月，如果已經按了當月結算回朔的月份不能再按單月結算對應closeAccount event
+            db連結該年該月的資料 並更改year month
+            (使用者如果要回到當前就要點回最後一次的year month)
+        view-
+    
+
+    datanode:
+        v1. 將year month做linklist作法，並做初始化以配合close,select evnet
+        2. 直接宣告list大小作法 陣列判斷date+1是否為0
+
+
+    #bug -> 如果要可行回朔，回到該月份判斷之時 salarychecked已被close event更新成未登錄，導致回朔前月份之際會無法顯示
+            -> DB進行調整強化，或是找其他輸入點進行回朔判斷。
+
+subclass-
 
     new_emp_view    
+        model-
+            try 新增員工輸入資料，假設重複就err，input DB
+        view-
+            input 資料，and information show 完成
+    delete_emp_view
+        model-
+            如同new
     value_set_view 
+        model-
+            更改db value 資料
+        view-
+            新增完成
+    emp-history
+        員工歷史紀錄查詢可以選擇各employee來特別顯示從登陸薪資至今的紀錄以及圖表顯示
+        model-
+        
+    com-history     
+        公司總薪水紀錄，從登陸薪資開始所有總薪資紀錄，以及各職員占比以及月薪水支出圖表
+        model-
 
-undo ->
+
+main-list ->
 
     #員工編輯完成,刪除acc,新增error作qmesbox提示使用者
     #account預設畫面調整
@@ -413,24 +472,20 @@ undo ->
         #2.info page guide check
         #3.更新or刪除完view會跳回到unclick,回預設button設定
     #進行更改自動計算項 (更新成隨改隨算event 取代試算event)
-    
-create/update button event合併更新與新增事件
-preview_clicked 預覽成word技術 + 應用    
-當月結算event處理
+    #create/update button event合併更新與新增事件
+preview_clicked 預覽成word技術 + 應用
+當月結算event處理 select-date event同時處理 new combobox 連結已登錄年份日期以便回朔year + month 
+->強化DB
 
-undo subclass ->
+
+subclass-list ->
 --------------------------
     #子畫面view呼叫triggered -> menubar
 新增刪除員工view完成 ->new_emp_clicked新增刪除員工in DB
 設定-參數設定窗value_set_view   -> done_clicked 
-資料庫-總歷史資料 (待議)(時間充裕做)
-員工歷史資料     (待議)
-
+資料庫-總歷史資料show 
+員工歷史資料
 (手動viersion完成)
-
-
-
-
 
 
 

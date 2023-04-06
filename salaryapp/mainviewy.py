@@ -346,9 +346,6 @@ class MainView(QtWidgets.QMainWindow):
         font.setPointSize(10)
         self.normalsecondovertime.setFont(font)
         self.normalsecondovertime.setObjectName("normalsecondovertime")
-        self.pushButton_3 = QtWidgets.QPushButton(self.Account)
-        self.pushButton_3.setGeometry(QtCore.QRect(130, 730, 93, 41))
-        self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_4 = QtWidgets.QPushButton(self.Account)
         self.pushButton_4.setGeometry(QtCore.QRect(230, 730, 93, 41))
         self.pushButton_4.setObjectName("pushButton_4")
@@ -584,8 +581,7 @@ class MainView(QtWidgets.QMainWindow):
         MainWindow.setTabOrder(self.normaltotal, self.overtimetotal)
         MainWindow.setTabOrder(self.overtimetotal, self.laborpension)
         MainWindow.setTabOrder(self.laborpension, self.total_salary)
-        MainWindow.setTabOrder(self.total_salary, self.pushButton_3)
-        MainWindow.setTabOrder(self.pushButton_3, self.pushButton_4)
+        MainWindow.setTabOrder(self.total_salary, self.pushButton_4)
         MainWindow.setTabOrder(self.pushButton_4, self.pushButton_5)
         MainWindow.setTabOrder(self.pushButton_5, self.pushButton_6)
         MainWindow.setTabOrder(self.pushButton_6, self.pushButton_7)
@@ -650,7 +646,6 @@ class MainView(QtWidgets.QMainWindow):
         self.normalmeals.setText(_translate("MainWindow", "0"))
         self.openbouns.setText(_translate("MainWindow", "0"))
         self.normalsecondovertime.setText(_translate("MainWindow", "0"))
-        self.pushButton_3.setText(_translate("MainWindow", "試算"))
         self.pushButton_4.setText(_translate("MainWindow", "刪除"))
         self.pushButton_5.setText(_translate("MainWindow", "預覽"))
         self.pushButton_6.setText(_translate("MainWindow", "新增"))
@@ -902,7 +897,7 @@ class MainView(QtWidgets.QMainWindow):
             self.pushButton_6.setEnabled(True)
 
 
-    #新增更新試算表click
+    #新增更新create/update試算表click
     def create_account_clicked(self):
         self.model.create_click.connect(self.addtodoneview)
         self.data = {
@@ -949,9 +944,11 @@ class MainView(QtWidgets.QMainWindow):
         self.default_set()
         self.sumtotal()
     def addtodoneview(self,strdata):
-        QtWidgets.QMessageBox.information(self, '新增失敗', '重複新增%s的薪水，請進行修改或刪除重試'%strdata)
-
-
+        self.controller.show_undoview()
+        if '###' in strdata:
+            QtWidgets.QMessageBox.information(self, '更新成功', '%s之薪水已更新'%strdata.replace("###",""))
+        else:
+            QtWidgets.QMessageBox.information(self, '新增成功', '%s之薪水已新增'%strdata)
     #刪除試算表click
     def delete_account_clicked(self):
         self.model.delete_click.connect(self.delete_info)
@@ -1000,10 +997,7 @@ class MainView(QtWidgets.QMainWindow):
     #word預覽click
     def preview_word(self):
         self.model.preview_click.connect(self.wordshow)
-        self.input = {
-            'eid':self.eid.text(),
-        }
-        self.controller.preview_clicked(self.input)
+        self.controller.preview_clicked(self.eid.text())
         self.model.preview_click.disconnect(self.wordshow)
     def wordshow(self, emp_info):
         pass
@@ -1105,6 +1099,17 @@ class MainView(QtWidgets.QMainWindow):
         self.laborpension.setText(auto_data['labor'])
         self.total_salary.setText(auto_data['total'])
 
+    def close_account(self):
+        self.model.closeAccount.connect(self.change)
+        self.controller.close_account()
+    def change(self,s):
+        print(s)
+
+    def select_date(self):
+        pass
+    def reverse_date(self):
+        pass
+
 
 #-----------------------------------------------------
 #sub view
@@ -1112,6 +1117,15 @@ class MainView(QtWidgets.QMainWindow):
     def newemp(self):
         self.new_emp_window = New_emp()
         self.new_emp_window.show()
+    
+    def delemp(self):
+        pass
+    
+    def valueset(self):
+        pass
+
+    def data_his(self):
+        pass
 
 
     #依照該button對應event進行connect (各事件再處理與controller的互動，這邊只是連接畫面跟事件觸及)
@@ -1130,3 +1144,7 @@ class MainView(QtWidgets.QMainWindow):
         
         #new emp page
         self.actionnew.triggered.connect(self.newemp)
+
+        #close-account
+        self.pushButton_7.clicked.connect(self.close_account)
+
