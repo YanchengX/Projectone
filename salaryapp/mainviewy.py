@@ -14,6 +14,7 @@ class MainView(QtWidgets.QMainWindow):
         self.get_date()
         self.sumtotal()
         self.auto_counting_event()
+        self.comboshow()
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -508,6 +509,9 @@ class MainView(QtWidgets.QMainWindow):
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
+        self.comboBox = QtWidgets.QComboBox(self.Account)
+        self.comboBox.setGeometry(QtCore.QRect(0, 0, 161, 22))
+        self.comboBox.setObjectName("comboBox")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1088, 25))
@@ -853,7 +857,7 @@ class MainView(QtWidgets.QMainWindow):
         self.account_disable()
 
 
-    #一般資訊完成click
+    '''一般資訊完成click'''
     def infodata_done_clicked(self):
         try:
             self.model.info_done_click.connect(self.update_infodata)
@@ -949,6 +953,8 @@ class MainView(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.information(self, '更新成功', '%s之薪水已更新'%strdata.replace("###",""))
         else:
             QtWidgets.QMessageBox.information(self, '新增成功', '%s之薪水已新增'%strdata)
+    
+    
     #刪除試算表click
     def delete_account_clicked(self):
         self.model.delete_click.connect(self.delete_info)
@@ -1099,16 +1105,29 @@ class MainView(QtWidgets.QMainWindow):
         self.laborpension.setText(auto_data['labor'])
         self.total_salary.setText(auto_data['total'])
 
+
+    #當月結算
     def close_account(self):
         self.model.closeAccount.connect(self.change)
         self.controller.close_account()
+        self.model.closeAccount.disconnect(self.change)
     def change(self,s):
         print(s)
 
-    def select_date(self):
-        pass
-    def reverse_date(self):
-        pass
+    '''combox_event'''
+    def comboshow(self):
+        self.model.comboevent.connect(self.showdate)
+        self.controller.comboshow()
+        self.model.comboevent.disconnect(self.showdate)
+    def showdate(self, dateset):
+        self.comboBox.addItems(dateset)
+    
+    def selectdate(self):
+        self.model.dateselectsignal.connect(self.dateback)
+        self.controller.selectdate(self.comboBox.currentText())
+        self.model.dateselectsignal.disconnect(self.dateback)
+    def dateback(self, ym):
+        print(ym)
 
 
 #-----------------------------------------------------
@@ -1148,3 +1167,5 @@ class MainView(QtWidgets.QMainWindow):
         #close-account
         self.pushButton_7.clicked.connect(self.close_account)
 
+        #dateselect
+        self.comboBox.currentIndexChanged.connect(self.selectdate)

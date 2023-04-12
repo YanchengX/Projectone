@@ -408,32 +408,70 @@ mainviewy事件處理:
 
     closed_Account:
         該月薪資結算並將資料更新到下個月份以及調整DB內容等等。
-        年份月份更新，salarychecked都歸0，
+        bug-> 目前利用到salarychecked邏輯判斷的有
+            show-undoview -> show listview if 已登錄就show salary
+            account_guide_checked -> 引導button點擊event
+            create_account_clicked -> 新增account event
+            delete_account_clicked -> 刪除account event
+        DB problem->
+            salarychecked 黏在basicinfo上 -> 如果要選擇其他年月份時要跟著判斷當時是否有登錄 -> 就要新增DB判斷
+            new sheet -> (eid year month salarychecked)
+            checked in basicinfo -> salarychecked刪除 留剩完整資訊
         model-
-            回到預設值 and 預備下一個階段DB的數值:
-            __init__ 的year month 進程，當年月結算過後之回朔的closeAccount button都為disable
-            該event就把時間推進以及初始化而已。
-            如果list.next = none 就able closeAccount event
+            closed-account:
+                按下結算時紀錄當月份eid year month salarychecked (該月薪資資料不用，如果create了就已經將eid data存入)並將year month 進程
+                #salarychecked另開一個db sheet
+            其他event:
+                配合新DB並記錄 但保持原有邏輯紀錄以便判斷邏輯並確保已經做更改
+                sequence -> create, show view, guide checked, delete
+                \
+                #create_account_clicked
+                #show-undoview
+                #account_guide_checked 
+                #delete_account_clicked 
+                @caseid 邏輯可以用stack處理
+            
         view-
-            reset to default view 
+            reset to default view and recall listview
             呼叫所有default set or 乾脆重新開啟
 
-    select_date:
+    #comboboxshow:
+        get year, month have been history-> show on combobox
+        
+
+    #datecombox_event(selectdate):
+        click combox事件，當選定目標年月份就更改year and month並顯示完整該年月份資料
+        
+        model-
+            收到目標年月就更改year month來顯示該月份資料
+        view-
+            return currentIndex ->
+            判斷是否為最後一個然後able/disable 結算button
+
+
+    select_date_event:
         一個or兩個按鈕點選顯示該月薪資檔案，以方便回朔對資料
         model-
-            接收到view的年月 回朔到該年月，如果已經按了當月結算回朔的月份不能再按單月結算對應closeAccount event
+            傳送event(set of year and month) to combobox顯示
+            接收到view的年月 回朔到該年月，如果已經按了當月結算回朔的月份不能再按單月結算 且對應closeAccount event
             db連結該年該月的資料 並更改year month
+
+            DB connect -> eid year month(show view->) unique id
+            salarychecked -> salary data
+            (此邏輯代表過去結算不予補計?or not)
             (使用者如果要回到當前就要點回最後一次的year month)
         view-
-    
-
-    datanode:
-        v1. 將year month做linklist作法，並做初始化以配合close,select evnet
-        2. 直接宣告list大小作法 陣列判斷date+1是否為0
+            接收所有已登錄年月 show on combobox
+            combobox event->
+            判斷是否為最後一個然後able/disable 結算button
 
 
+
+------
     #bug -> 如果要可行回朔，回到該月份判斷之時 salarychecked已被close event更新成未登錄，導致回朔前月份之際會無法顯示
             -> DB進行調整強化，或是找其他輸入點進行回朔判斷。
+------
+
 
 subclass-
 
@@ -473,9 +511,12 @@ main-list ->
         #3.更新or刪除完view會跳回到unclick,回預設button設定
     #進行更改自動計算項 (更新成隨改隨算event 取代試算event)
     #create/update button event合併更新與新增事件
+    #當月close account 處理，解決salary_checked邏輯問題(變為可依按照年月份更動)
+
+
 preview_clicked 預覽成word技術 + 應用
-當月結算event處理 select-date event同時處理 new combobox 連結已登錄年份日期以便回朔year + month 
-->強化DB
+select-date event(combobox) -> 可選擇跳至任何已記錄年月份薪資
+
 
 
 subclass-list ->
@@ -601,3 +642,9 @@ overtimetotal
 laborpension
 total_salary
     #-------autoItem
+
+
+
+已知bug整理:
+    首次click listiview介面自動運算沒有更動
+

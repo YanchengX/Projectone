@@ -15,6 +15,8 @@ class Model(QStringListModel):
     sumtotalsignal = pyqtSignal(str)
     auto_count_value = pyqtSignal(dict)
     closeAccount = pyqtSignal(str)
+    comboevent = pyqtSignal(list)
+    dateselectsignal = pyqtSignal(list)
 
     def __init__(self):
         super(Model, self).__init__()
@@ -40,23 +42,23 @@ class Model(QStringListModel):
         self.meal_value = 60
         self.overtime1 = 1/8/30*1.34
         self.overtime2 = 1/8/30*1.67
-        
-        
+
+    '''listview show
+        bug1 -> left join checks 會影響顯示需更改 year and month要進去(年月加進去DELETE時eventdata會沒資料所以會不顯示)'''
     def show_undoview(self):
         self.strdata = []
-
-        self.viewdata = self.cursor.execute("SELECT basicinfo.eid, basicinfo.eproperty, basicinfo.ename, basicinfo.salarychecked, eventdata.total_salary FROM basicinfo LEFT JOIN eventdata ON basicinfo.eid = eventdata.eid")        
-
-        for listdata in self.viewdata: #(a,3,7,8,,54,3)
+        # join basicinfo and total.salary and salarychecked -> eid year month is must unique
+        self.viewdata = self.cursor.execute("SELECT basicinfo.eid, basicinfo.eproperty, basicinfo.ename, eventdata.total_salary, checks.salary_checked, eventdata.year, eventdata.month FROM basicinfo LEFT JOIN eventdata ON basicinfo.eid = eventdata.eid LEFT JOIN checks ON basicinfo.eid = checks.eid")
+        for listdata in self.viewdata:
+            #eid eproperty name salary checkeds year month
             tmp = ''
             for i in range(3):
                 tmp += ''.join(listdata[i])
                 tmp += ''.join(' / ')
-            
-            if listdata[3] == 0:
+            if listdata[4] == 0:
                 tmp += ''.join('未登錄')
-            if listdata[3] == 1:
-                tmp += ''.join(str(listdata[4]))
+            if listdata[4] == 1:
+                tmp += ''.join(str(listdata[3]))
 
             self.strdata.append(tmp)
         self.setStringList(self.strdata)
@@ -72,6 +74,7 @@ class Model(QStringListModel):
                 'eid' : self.infodata[index][0]
             })
             e = self.emp.fetchone()
+
             self.data = {
             "eid": e[0],
             "eproperty":e[1],
@@ -83,33 +86,34 @@ class Model(QStringListModel):
             "caseid":e[6],
             "year":e[8],
             "month":e[9],
-            "total_salary":e[11],
-            "laborpension":e[12],
-            "normalmeals":e[16],
-            "allrbouns":e[17],
-            "openbouns":e[18],
-            "responsiblebouns":e[19],
-            "otherplus":e[20],
-            "workerfee":e[21],
-            "healthfee":e[22],
-            "dayoff":e[23],
-            "borrow":e[24],
-            "mealcall":e[25],
-            "otherminus":e[26],
-            "normaltotal":e[27],
+            "total_salary":e[10],
+            "laborpension":e[11],
+            "normalmeals":e[15],
+            "allrbouns":e[16],
+            "openbouns":e[17],
+            "responsiblebouns":e[18],
+            "otherplus":e[19],
+            "workerfee":e[20],
+            "healthfee":e[21],
+            "dayoff":e[22],
+            "borrow":e[23],
+            "mealcall":e[24],
+            "otherminus":e[25],
+            "normaltotal":e[26],
             #----------
-            "normalfirstovertime":e[31],     
-            "normalsecondovertime":e[32],
-            "saturdayovertime":e[33],       
-            "specialovertime":e[34],	        
-            "sundayovertime":e[35],	       
-            "normalovertime_meals":e[36],   
-            "saturdayovertime_meals":e[37],
-            "specialovertime_meals":e[38], 
-            "sundayfovertime_meals":e[39],
-            "overtimeother":e[40], 
-            "overtimetotal":e[41]
-        }
+            "normalfirstovertime":e[30],     
+            "normalsecondovertime":e[31],
+            "saturdayovertime":e[32],       
+            "specialovertime":e[33],	        
+            "sundayovertime":e[34],	       
+            "normalovertime_meals":e[35],   
+            "saturdayovertime_meals":e[36],
+            "specialovertime_meals":e[37], 
+            "sundayfovertime_meals":e[38],
+            "overtimeother":e[39], 
+            "overtimetotal":e[40]
+            }
+
         else:
             self.emp = self.cursor.execute("SELECT * FROM basicinfo WHERE eid =:eid ",{'eid':self.infodata[index][0]})
             e = self.emp.fetchone()
@@ -154,10 +158,17 @@ class Model(QStringListModel):
         self.click_emp.emit(self.data)
 
 
+    '''button guide in select date when salarychecked is 0 or 1
+        #to be contiune to solve'''
     def account_guide_checked(self, index):
-        self.idata = self.cursor.execute('SELECT basicinfo.salarychecked FROM basicinfo WHERE basicinfo.eid =:eid',{'eid':self.infodata[index][0]})
-        self.checked =  self.idata.fetchone()
-        self.account_guide_signal.emit(str(self.checked[0]))
+        check = self.cursor.execute('SELECT checks.eid, checks.salary_checked FROM checks WHERE eid = :eid AND year = :year AND month = :month',{
+            'eid' : self.infodata[index][0],
+            'year' : self.year,
+            'month' : self.month
+        })
+        c = check.fetchone()
+        self.account_guide_signal.emit(str(c[1]))
+        #self.idata = self.cursor.execute('SELECT basicinfo.salarychecked FROM basicinfo WHERE basicinfo.eid =:eid',{'eid':self.infodata[index][0]})
 
 
     def infodata_edit_clicked(self):
@@ -182,20 +193,23 @@ class Model(QStringListModel):
         self.info_done_click.emit(listinfodata[0])
 
 
+    '''新增/更新event
+        #update salary checked完成
+    '''
     def create_account_clicked(self, dictdata):
         #find all event
         self.tmp = self.cursor.execute("SELECT eventdata.caseid, eventdata.eid, eventdata.year, eventdata.month FROM eventdata WHERE 1")
         self.eventdata = self.tmp.fetchall()
         
-        #caseid logic
+        #caseid logic -> usingstack and combine delete
         item = self.eventdata[len(self.eventdata)-1][0] if self.eventdata else 0
         self.caseid = item
         self.count = 0
-        
+         
         for item in self.eventdata:
             #update
             if dictdata["eid"] in item and str(self.year) in item and str(self.month) in item:
-                #event normal overtime\
+                #event normal overtime
                 self.cursor.execute("UPDATE eventdata SET total_salary = :total_salary ,laborpension = :laborpension WHERE eid = :eid and year = :year and month = :month",
                 {
                     "eid":dictdata["eid"],
@@ -204,6 +218,7 @@ class Model(QStringListModel):
                     "total_salary":dictdata["total_salary"],
                     "laborpension":dictdata["laborpension"]
                 })
+                print(self.cursor.fetchall())
                 self.cursor.execute("UPDATE normal SET normalmeals = :normalmeals, allrbouns = :allrbouns, openbouns = :openbouns, responsiblebouns = :responsiblebouns, otherplus = :otherplus, workerfee = :workerfee, healthfee = :healthfee, dayoff = :dayoff, borrow = :borrow, mealcall = :mealcall, otherminus = :otherminus, normaltotal = :normaltotal WHERE eid = :eid and year = :year and month = :month",
                 {
                     "eid":dictdata["eid"],
@@ -242,10 +257,16 @@ class Model(QStringListModel):
                 self.create_click.emit(dictdata['eid'] + "".join('###'))
                 self.count += 1
                 break
-        if self.count == False:
+            #該月尚未insert
+        if self.count == 0:
             self.caseid += 1        
-            # update salarychecked
-            self.cursor.execute("UPDATE basicinfo SET salarychecked = 1 WHERE eid = :eid",{'eid':dictdata['eid']})
+            #salarychecked update
+            self.cursor.execute("UPDATE checks SET salary_checked = 1 WHERE eid = :eid AND year = :year AND month = :month",
+            {
+                'eid':dictdata['eid'],
+                'year':dictdata['year'],
+                'month':dictdata['month'],
+            })
             #insert data
             self.cursor.execute("INSERT INTO eventdata VALUES(:caseid, :eid, :year, :month, :total_salary, :laborpension)"
             ,{
@@ -295,10 +316,16 @@ class Model(QStringListModel):
             self.create_click.emit(dictdata['eid'])
         self.conn.commit()
 
-
+    '''刪除event'''
     def delete_account_clicked(self,dictdata):
         try:
-            self.cursor.execute("UPDATE basicinfo SET salarychecked = 0 WHERE eid = :eid",{'eid':dictdata['eid']})
+            #delete -> event, normal, overtime, checks
+            self.cursor.execute("UPDATE checks SET salary_checked = 0 WHERE eid = :eid AND year = :year AND month = :month",
+            {
+                'eid':dictdata['eid'],
+                'year':dictdata['year'],
+                'month':dictdata['month'],
+            })
             self.cursor.execute("DELETE FROM eventdata WHERE eid = :eid AND year = :year AND month = :month",
             {
                 'eid':dictdata['eid'],
@@ -399,23 +426,35 @@ class Model(QStringListModel):
 
 
     def close_account(self):
-        #當月結算->
-        # 接收combobox年月份，對到該node如果.next = none 可以執行該event
-        # new node year and month, 
-        # db 將emp 的salarychecked 改為0 -> 需跟year, month配合 每月一個salarycheck 在搭配eid
-        # 
-        #           
+        # #當月結算->
+        # self.year += 1
+        # self.month = self.month + 1 if self.month + 1 < 13 else 1
+        validemp = self.cursor.execute("SELECT basicinfo.eid FROM basicinfo WHERE 1")
+        for i in validemp.fetchall():    
+            self.cursor.execute("INSERT INTO checks VALUES(:eid, :year, :month, :salary_checked)",{
+            'eid':i[0],
+            "year":self.year,
+            "month":self.month,
+            'salary_checked': 0
+            })
+        self.conn.commit()
+
         self.closeAccount.emit('fuck')
 
-    def select_date(self):
-        pass
+    '''combobox show date'''
+    def comboshow(self):
+        date = self.cursor.execute('SELECT eventdata.year, eventdata.month FROM eventdata WHERE 1')
+        dateset = set(date)
+        listdate = []
+        #set listdate and tostring
+        for da in dateset:
+            if da[0] not in listdate and da[1] not in listdate:
+                listdate.append(da[0] + '-' + da[1])
+        self.comboevent.emit(listdate)
 
 
+    def selectdate(self, ym):
+        sel = ym.split('-')
+        self.year, self.month = sel[0], sel[1]
+        self.dateselectsignal.emit(ym.split('-'))
 
-
-
-class dataNode:
-    def __init__(self, year, month) -> None:
-        self.year = year
-        self.month = month
-        self.next = None

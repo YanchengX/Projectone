@@ -45,5 +45,8 @@ class MainController(QObject):
     def close_account(self):
         self.model.close_account()
 
-    def select_date(self):
-        pass
+    def comboshow(self):
+        self.model.comboshow()
+
+    def selectdate(self, ym):
+        self.model.selectdate(ym)
