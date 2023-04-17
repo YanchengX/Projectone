@@ -1112,22 +1112,25 @@ class MainView(QtWidgets.QMainWindow):
         self.controller.close_account()
         self.model.closeAccount.disconnect(self.change)
     def change(self,s):
+        #讓combobox處在latest月
+
         print(s)
 
     '''combox_event'''
     def comboshow(self):
         self.model.comboevent.connect(self.showdate)
         self.controller.comboshow()
-        self.model.comboevent.disconnect(self.showdate)
-    def showdate(self, dateset):
-        self.comboBox.addItems(dateset)
-    
+    def showdate(self, alldate):
+        self.comboBox.clear()
+        self.comboBox.addItems(alldate)
+
+
     def selectdate(self):
         self.model.dateselectsignal.connect(self.dateback)
         self.controller.selectdate(self.comboBox.currentText())
         self.model.dateselectsignal.disconnect(self.dateback)
     def dateback(self, ym):
-        print(ym)
+        print('dateback')
 
 
 #-----------------------------------------------------

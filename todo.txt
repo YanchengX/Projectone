@@ -421,6 +421,7 @@ mainviewy事件處理:
             closed-account:
                 按下結算時紀錄當月份eid year month salarychecked (該月薪資資料不用，如果create了就已經將eid data存入)並將year month 進程
                 #salarychecked另開一個db sheet
+                #並對salarychecked進行新一個月的預設更新
             其他event:
                 配合新DB並記錄 但保持原有邏輯紀錄以便判斷邏輯並確保已經做更改
                 sequence -> create, show view, guide checked, delete
@@ -430,13 +431,13 @@ mainviewy事件處理:
                 #account_guide_checked 
                 #delete_account_clicked 
                 @caseid 邏輯可以用stack處理
-            
+                @show-undoview bug顯示問題(sql語法)
         view-
             reset to default view and recall listview
             呼叫所有default set or 乾脆重新開啟
 
-    #comboboxshow:
-        get year, month have been history-> show on combobox
+    comboboxshow:
+        get year, month have been history-> show latest date on combobox
         
 
     #datecombox_event(selectdate):
@@ -449,6 +450,17 @@ mainviewy事件處理:
             判斷是否為最後一個然後able/disable 結算button
 
 
+    date_event:
+        對於已經新增的data sheet處理event sql insert動作
+        model-
+            if date從未登記日期就給初始值(2022/10)<<設計初始年月份for首次使用者
+            當每月結算發生時date_event就進程，並year,month都是唯一值且dateid + 1紀錄代表紀錄的第dateid個月
+            已經記錄之事項不處理刪除事宜(永遠保存於資料庫)代表記錄過
+        view-
+            相關date顯示會在於combobox上
+
+
+    (概念event)
     select_date_event:
         一個or兩個按鈕點選顯示該月薪資檔案，以方便回朔對資料
         model-
@@ -466,10 +478,23 @@ mainviewy事件處理:
             判斷是否為最後一個然後able/disable 結算button
 
 
-
+develop-log
 ------
+    bug -> 初始日期無法透過更改初始，必須都得從2022/10開始(可用insertbox 使用者設定自行解決)
     #bug -> 如果要可行回朔，回到該月份判斷之時 salarychecked已被close event更新成未登錄，導致回朔前月份之際會無法顯示
             -> DB進行調整強化，或是找其他輸入點進行回朔判斷。
+    issue -> 年份月份應該記載到資料庫否則程式預設值無法比照上一次開啟選擇之月份，然後更改combobox預設最近一次更新date
+    issue ->輸入數字之防呆(try except...)
+4/16
+    insert year and month in database
+    date-event安排
+    subclass深入安排
+    暫時解決show-view的問題
+4/17
+    解決combobox 新增refresh問題
+
+
+next todo
 ------
 
 
@@ -477,17 +502,22 @@ subclass-
 
     new_emp_view    
         model-
-            try 新增員工輸入資料，假設重複就err，input DB
+            try 新增員工輸入資料，假設重複or亂輸入就err，insert data in DB
+            DB -> basicinfo, checks(並計算當月date來insert)
         view-
             input 資料，and information show 完成
+    
     delete_emp_view
         model-
-            如同new
+            已登錄資料如果要刪除員工但必須繼續過往留下資料，此時可以(匯出刪除員工data)或database直接隱藏
+            比較像是去除該員工往後的薪資登錄而非刪除。(額外狀況->如果員工復職那就將隱藏改回否則都一律進行隱藏)
+    
     value_set_view 
         model-
-            更改db value 資料
+            可以進行value更改然後update DB
         view-
             新增完成
+    
     emp-history
         員工歷史紀錄查詢可以選擇各employee來特別顯示從登陸薪資至今的紀錄以及圖表顯示
         model-

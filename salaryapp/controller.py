@@ -50,3 +50,5 @@ class MainController(QObject):
 
     def selectdate(self, ym):
         self.model.selectdate(ym)
+
+

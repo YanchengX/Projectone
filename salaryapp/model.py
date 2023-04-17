@@ -30,8 +30,10 @@ class Model(QStringListModel):
         
         self.caseid = 0
         #year,month
-        self.year = 2022
-        self.month = 10
+        self.year = None
+        self.month = None
+        self.date_event()
+
         
         #normal_value參數
         self.workerfee_rate = 0.115 * 0.2
@@ -44,11 +46,14 @@ class Model(QStringListModel):
         self.overtime2 = 1/8/30*1.67
 
     '''listview show
-        bug1 -> left join checks 會影響顯示需更改 year and month要進去(年月加進去DELETE時eventdata會沒資料所以會不顯示)'''
+        #bug1 -> left join checks 會影響顯示需更改 year and month要進去(年月加進去DELETE時eventdata會沒資料所以會不顯示)'''
     def show_undoview(self):
         self.strdata = []
         # join basicinfo and total.salary and salarychecked -> eid year month is must unique
-        self.viewdata = self.cursor.execute("SELECT basicinfo.eid, basicinfo.eproperty, basicinfo.ename, eventdata.total_salary, checks.salary_checked, eventdata.year, eventdata.month FROM basicinfo LEFT JOIN eventdata ON basicinfo.eid = eventdata.eid LEFT JOIN checks ON basicinfo.eid = checks.eid")
+        self.viewdata = self.cursor.execute("SELECT basicinfo.eid, basicinfo.eproperty, basicinfo.ename, eventdata.total_salary, checks.salary_checked, checks.year, checks.month FROM basicinfo LEFT JOIN eventdata ON basicinfo.eid = eventdata.eid LEFT JOIN checks ON basicinfo.eid = checks.eid WHERE checks.year = :year AND checks.month = :month",{
+            'year':self.year,
+            'month':self.month
+        })
         for listdata in self.viewdata:
             #eid eproperty name salary checkeds year month
             tmp = ''
@@ -218,7 +223,6 @@ class Model(QStringListModel):
                     "total_salary":dictdata["total_salary"],
                     "laborpension":dictdata["laborpension"]
                 })
-                print(self.cursor.fetchall())
                 self.cursor.execute("UPDATE normal SET normalmeals = :normalmeals, allrbouns = :allrbouns, openbouns = :openbouns, responsiblebouns = :responsiblebouns, otherplus = :otherplus, workerfee = :workerfee, healthfee = :healthfee, dayoff = :dayoff, borrow = :borrow, mealcall = :mealcall, otherminus = :otherminus, normaltotal = :normaltotal WHERE eid = :eid and year = :year and month = :month",
                 {
                     "eid":dictdata["eid"],
@@ -424,11 +428,27 @@ class Model(QStringListModel):
         }
         self.auto_count_value.emit(autodata)
 
-
+    '''當月結算事件 當現在指向為lastest date才能進行event'''
     def close_account(self):
-        # #當月結算->
-        # self.year += 1
-        # self.month = self.month + 1 if self.month + 1 < 13 else 1
+        #日期進程
+        if int(self.month) + 1 > 12:
+            self.year = str(int(self.year) + 1)
+            self.month = str(1)
+        else:
+            self.month = str(int(self.month) + 1)
+
+        #find latest date
+        a = self.cursor.execute('SELECT dateid FROM date')
+        latest = a.fetchall()[-1][0] #tuple
+
+        #new next date
+        self.cursor.execute('INSERT INTO date VALUES(:dateid, :year, :month)',{
+            'dateid': latest + 1,
+            'year': self.year,
+            'month': self.month
+        })
+
+        #更新下個月預設salarychecked = 0
         validemp = self.cursor.execute("SELECT basicinfo.eid FROM basicinfo WHERE 1")
         for i in validemp.fetchall():    
             self.cursor.execute("INSERT INTO checks VALUES(:eid, :year, :month, :salary_checked)",{
@@ -438,23 +458,50 @@ class Model(QStringListModel):
             'salary_checked': 0
             })
         self.conn.commit()
+        self.closeAccount.emit('更新紀錄日期為 {} 年 {} 月'.format(self.year, self.month))
+        self.comboshow()
 
-        self.closeAccount.emit('fuck')
 
-    '''combobox show date'''
+    '''combobox日期顯示additems事件 要改成date查詢已紀錄事宜'''
     def comboshow(self):
-        date = self.cursor.execute('SELECT eventdata.year, eventdata.month FROM eventdata WHERE 1')
-        dateset = set(date)
+        date = self.cursor.execute('SELECT date.year, date.month FROM date')
         listdate = []
         #set listdate and tostring
-        for da in dateset:
-            if da[0] not in listdate and da[1] not in listdate:
+        for da in date:
+            #prevent duplicate date-> 
+            strdata = '{}-{}'.format(da[0],da[1])
+            if strdata in listdate:
+                print('duplicate date error')
+            else:
                 listdate.append(da[0] + '-' + da[1])
         self.comboevent.emit(listdate)
 
-
     def selectdate(self, ym):
-        sel = ym.split('-')
-        self.year, self.month = sel[0], sel[1]
-        self.dateselectsignal.emit(ym.split('-'))
+        if ym != '':
+            sel = ym.split('-')
+            self.year, self.month = sel[0], sel[1]
+            self.dateselectsignal.emit(ym.split('-'))
+
+
+    '''初始化程式date指向的event'''
+    def date_event(self):
+        isnull = self.cursor.execute("SELECT * FROM date")
+        a = isnull.fetchall()
+        if a == []:
+            #default
+            self.cursor.execute('INSERT INTO date VALUES(:dateid, :year, :month)',{
+                'dateid': 0,
+                'year':'2022',
+                'month':'10'
+            })
+            insert = self.cursor.execute('SELECT * FROM date')
+            item = insert.fetchone()
+            self.year = item[0]
+            self.month = item[1]
+            self.conn.commit()
+        else:
+            #latest (dateid year month)
+            self.year = a[-1][1]
+            self.month = a[-1][2]
+
 
