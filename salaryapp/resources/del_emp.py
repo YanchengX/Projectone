@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'new_emp.ui'
+# Form implementation generated from reading ui file 'del_emp.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(300, 300)
+        MainWindow.resize(150, 150)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -32,27 +32,9 @@ class Ui_MainWindow(object):
         self.neid = QtWidgets.QLabel(self.centralwidget)
         self.neid.setObjectName("neid")
         self.verticalLayout.addWidget(self.neid)
-        self.e1 = QtWidgets.QLineEdit(self.centralwidget)
-        self.e1.setObjectName("e1")
-        self.verticalLayout.addWidget(self.e1)
-        self.neproperty = QtWidgets.QLabel(self.centralwidget)
-        self.neproperty.setObjectName("neproperty")
-        self.verticalLayout.addWidget(self.neproperty)
-        self.e2 = QtWidgets.QLineEdit(self.centralwidget)
-        self.e2.setObjectName("e2")
-        self.verticalLayout.addWidget(self.e2)
-        self.nename = QtWidgets.QLabel(self.centralwidget)
-        self.nename.setObjectName("nename")
-        self.verticalLayout.addWidget(self.nename)
-        self.e3 = QtWidgets.QLineEdit(self.centralwidget)
-        self.e3.setObjectName("e3")
-        self.verticalLayout.addWidget(self.e3)
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setObjectName("label")
-        self.verticalLayout.addWidget(self.label)
-        self.e4 = QtWidgets.QDateEdit(self.centralwidget)
-        self.e4.setObjectName("e4")
-        self.verticalLayout.addWidget(self.e4)
+        self.comboBox = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBox.setObjectName("comboBox")
+        self.verticalLayout.addWidget(self.comboBox)
         self.newemp = QtWidgets.QPushButton(self.centralwidget)
         self.newemp.setObjectName("newemp")
         self.verticalLayout.addWidget(self.newemp)
@@ -64,12 +46,9 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.inputt.setText(_translate("MainWindow", "輸入資料"))
+        self.inputt.setText(_translate("MainWindow", "刪除員工"))
         self.neid.setText(_translate("MainWindow", "員工編號:"))
-        self.neproperty.setText(_translate("MainWindow", "員工性質:"))
-        self.nename.setText(_translate("MainWindow", "員工姓名:"))
-        self.label.setText(_translate("MainWindow", "入職日期:"))
-        self.newemp.setText(_translate("MainWindow", "新增"))
+        self.newemp.setText(_translate("MainWindow", "刪除"))
 
 
 if __name__ == "__main__":

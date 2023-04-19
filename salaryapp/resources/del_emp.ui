@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>300</height>
+    <width>150</width>
+    <height>150</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
        </font>
       </property>
       <property name="text">
-       <string>輸入資料</string>
+       <string>刪除員工</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -41,42 +41,12 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="e1"/>
-    </item>
-    <item>
-     <widget class="QLabel" name="neproperty">
-      <property name="text">
-       <string>員工性質:</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="e2"/>
-    </item>
-    <item>
-     <widget class="QLabel" name="nename">
-      <property name="text">
-       <string>員工姓名:</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="e3"/>
-    </item>
-    <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>入職日期:</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QDateEdit" name="e4"/>
+     <widget class="QComboBox" name="comboBox"/>
     </item>
     <item>
      <widget class="QPushButton" name="newemp">
       <property name="text">
-       <string>新增</string>
+       <string>刪除</string>
       </property>
      </widget>
     </item>

@@ -4,19 +4,29 @@ import math
 from doct import Preview
 
 class Model(QStringListModel):
-    click_emp = pyqtSignal(dict)
-    info_edit_click = pyqtSignal()
-    info_done_click = pyqtSignal(str)
-    account_guide_signal = pyqtSignal(str)
-    create_click = pyqtSignal(str)
-    delete_click = pyqtSignal(str)
-    preview_click = pyqtSignal(list)
-    date_signal = pyqtSignal(list)
-    sumtotalsignal = pyqtSignal(str)
-    auto_count_value = pyqtSignal(dict)
-    closeAccount = pyqtSignal(str)
-    comboevent = pyqtSignal(list)
-    dateselectsignal = pyqtSignal(list)
+    click_emp = pyqtSignal(dict)            #員工click
+    info_edit_click = pyqtSignal()          #一般編輯click
+    info_done_click = pyqtSignal(str)       #一般完成click
+    account_guide_signal = pyqtSignal(str)  #防呆引導
+    create_click = pyqtSignal(str)          #新增
+    delete_click = pyqtSignal(str)          #刪除
+    preview_click = pyqtSignal(list)        #預覽
+    date_signal = pyqtSignal(list)          #日期
+    sumtotalsignal = pyqtSignal(str)        #總計
+    auto_count_value = pyqtSignal(dict)     #自動計算
+    closeAccount = pyqtSignal(str)          #單月結算
+    comboevent = pyqtSignal(list)           #combox信號
+    dateselectsignal = pyqtSignal(list)     #選擇combox date
+    latesignal = pyqtSignal(bool)           #最後單月判斷
+    
+    #subclass
+
+    newemp = pyqtSignal(str)                #新增員工
+    delemp = pyqtSignal(str)                #刪除員工
+    valuesetting = pyqtSignal(str)          #新增員工
+    emphis = pyqtSignal(str)                #新增員工
+    comhis = pyqtSignal(str)                #新增員工
+
 
     def __init__(self):
         super(Model, self).__init__()
@@ -45,25 +55,27 @@ class Model(QStringListModel):
         self.overtime1 = 1/8/30*1.34
         self.overtime2 = 1/8/30*1.67
 
-    '''listview show
-        #bug1 -> left join checks 會影響顯示需更改 year and month要進去(年月加進去DELETE時eventdata會沒資料所以會不顯示)'''
+
+    '''listview show'''
     def show_undoview(self):
         self.strdata = []
         # join basicinfo and total.salary and salarychecked -> eid year month is must unique
-        self.viewdata = self.cursor.execute("SELECT basicinfo.eid, basicinfo.eproperty, basicinfo.ename, eventdata.total_salary, checks.salary_checked, checks.year, checks.month FROM basicinfo LEFT JOIN eventdata ON basicinfo.eid = eventdata.eid LEFT JOIN checks ON basicinfo.eid = checks.eid WHERE checks.year = :year AND checks.month = :month",{
+        self.viewdata = self.cursor.execute("SELECT basicinfo.eid, basicinfo.eproperty, basicinfo.ename, checks.year, checks.month, checks.salary_checked, eventdata.total_salary FROM basicinfo LEFT JOIN checks ON basicinfo.eid = checks.eid LEFT JOIN eventdata ON basicinfo.eid = eventdata.eid AND checks.year = eventdata.year AND checks.month = eventdata.month WHERE checks.year = :year AND checks.month = :month",{
             'year':self.year,
             'month':self.month
         })
+
         for listdata in self.viewdata:
-            #eid eproperty name salary checkeds year month
+            print(listdata)
+            #eid eproperty name checks year month salary
             tmp = ''
             for i in range(3):
                 tmp += ''.join(listdata[i])
                 tmp += ''.join(' / ')
-            if listdata[4] == 0:
+            if listdata[5] == 0:
                 tmp += ''.join('未登錄')
-            if listdata[4] == 1:
-                tmp += ''.join(str(listdata[3]))
+            if listdata[5] == 1:
+                tmp += ''.join(str(listdata[6]))
 
             self.strdata.append(tmp)
         self.setStringList(self.strdata)
@@ -199,8 +211,7 @@ class Model(QStringListModel):
 
 
     '''新增/更新event
-        #update salary checked完成
-    '''
+        #update salary checked完成'''
     def create_account_clicked(self, dictdata):
         #find all event
         self.tmp = self.cursor.execute("SELECT eventdata.caseid, eventdata.eid, eventdata.year, eventdata.month FROM eventdata WHERE 1")
@@ -353,7 +364,7 @@ class Model(QStringListModel):
         except ValueError as e:
             print(e)
 
-
+    '''總額計算'''
     def sumtotal(self):
         self.totalpay = 0
         self.total =  self.cursor.execute("SELECT total_salary FROM eventdata WHERE year = :year and month = :month"
@@ -476,11 +487,24 @@ class Model(QStringListModel):
                 listdate.append(da[0] + '-' + da[1])
         self.comboevent.emit(listdate)
 
+    
+    '''combobox選擇日期event'''
     def selectdate(self, ym):
+        # 偵測該date
         if ym != '':
             sel = ym.split('-')
             self.year, self.month = sel[0], sel[1]
             self.dateselectsignal.emit(ym.split('-'))
+        
+    
+
+    '''當月結算防呆'''
+    def islatest(self, year, month):
+        late = self.cursor.execute('SELECT * FROM date')
+        a = late.fetchall()     #id,y,m
+        boo =  True if year.text() == a[-1][1] and month.text() == a[-1][2] else False
+        self.latesignal.emit(boo)
+
 
 
     '''初始化程式date指向的event'''
@@ -504,4 +528,31 @@ class Model(QStringListModel):
             self.year = a[-1][1]
             self.month = a[-1][2]
 
+#####################################################################################
+#Sub class
+    
+    '''新增員工 db-> basicinfo, checks'''
+    def new_emp(self, data):
+        #id property name seniority dayoffspectial basic-salary
+        try:
+            ymd = data['date'].split('/')
+            self.cursor.execute("INSERT INTO basicinfo VALUES('{}','{}','{}','{}','{}','{}')".format(
+                data['eid'], data['eproperty'], data['ename'], 0, 0, 0))
+            self.cursor.execute("INSERT INTO checks VALUES('{}','{}','{}',{})".format(
+                data['eid'], ymd[0], ymd[1], 0))
+            self.conn.commit()
+            self.newemp.emit('新增員工成功')
+        except:
+            print('輸入錯誤')
 
+    # def del_emp(self):
+
+    
+    # def value_set(self):
+
+
+    # def emp_history(self):
+
+    
+    # def com_history(self):
+    

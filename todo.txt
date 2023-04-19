@@ -406,7 +406,7 @@ mainviewy事件處理:
             preview連接view傳給model input進來的資料
 
 
-    closed_Account:
+    #closed_Account:
         該月薪資結算並將資料更新到下個月份以及調整DB內容等等。
         bug-> 目前利用到salarychecked邏輯判斷的有
             show-undoview -> show listview if 已登錄就show salary
@@ -436,7 +436,7 @@ mainviewy事件處理:
             reset to default view and recall listview
             呼叫所有default set or 乾脆重新開啟
 
-    comboboxshow:
+    #comboboxshow:
         get year, month have been history-> show latest date on combobox
         
 
@@ -450,7 +450,7 @@ mainviewy事件處理:
             判斷是否為最後一個然後able/disable 結算button
 
 
-    date_event:
+    #date_event:
         對於已經新增的data sheet處理event sql insert動作
         model-
             if date從未登記日期就給初始值(2022/10)<<設計初始年月份for首次使用者
@@ -460,8 +460,8 @@ mainviewy事件處理:
             相關date顯示會在於combobox上
 
 
-    (概念event)
-    select_date_event:
+    (combox select)
+    #select_date_event:
         一個or兩個按鈕點選顯示該月薪資檔案，以方便回朔對資料
         model-
             傳送event(set of year and month) to combobox顯示
@@ -477,14 +477,23 @@ mainviewy事件處理:
             combobox event->
             判斷是否為最後一個然後able/disable 結算button
 
+    #islatest_event:
+        判斷是否為最後一個登記date才能able當月結算button
+
 
 develop-log
 ------
-    bug -> 初始日期無法透過更改初始，必須都得從2022/10開始(可用insertbox 使用者設定自行解決)
+    bug -> 初始日期無法透過更改初始，必須都得從2022/10開始(可用用戶初始設定insertbox 或使用者設定自行解決)
+    issue ->輸入數字之防呆(try except...)    
+    #bug -> 多月計算show_view有問題
+
     #bug -> 如果要可行回朔，回到該月份判斷之時 salarychecked已被close event更新成未登錄，導致回朔前月份之際會無法顯示
             -> DB進行調整強化，或是找其他輸入點進行回朔判斷。
-    issue -> 年份月份應該記載到資料庫否則程式預設值無法比照上一次開啟選擇之月份，然後更改combobox預設最近一次更新date
-    issue ->輸入數字之防呆(try except...)
+    #issue -> 年份月份應該記載到資料庫否則程式預設值無法比照上一次開啟選擇之月份，然後更改combobox預設最近一次更新date
+
+    issue ->中途加入薪資問題。(採全手動輸入)(系統為半自動)
+    issue ->新增員工後undo view cicked問題 但程式重開沒問題
+
 4/16
     insert year and month in database
     date-event安排
@@ -492,6 +501,13 @@ develop-log
     暫時解決show-view的問題
 4/17
     解決combobox 新增refresh問題
+    對應年月的顯示薪水event
+4/18 
+    當月結算防呆
+    解決show view顯示問題
+    sumtotal隨combobox問題
+4/19
+    New_emp事件
 
 
 next todo
@@ -503,21 +519,23 @@ subclass-
     new_emp_view    
         model-
             try 新增員工輸入資料，假設重複or亂輸入就err，insert data in DB
-            DB -> basicinfo, checks(並計算當月date來insert)
+            DB -> basicinfo, checks(並用入職年月來insert)
         view-
             input 資料，and information show 完成
     
     delete_emp_view
+        已登錄資料如果要刪除員工但必須繼續過往留下資料，可匯出資料(報表and db)並刪除該data以便以後可能匯入查看資料
         model-
-            已登錄資料如果要刪除員工但必須繼續過往留下資料，此時可以(匯出刪除員工data)或database直接隱藏
-            比較像是去除該員工往後的薪資登錄而非刪除。(額外狀況->如果員工復職那就將隱藏改回否則都一律進行隱藏)
-    
+            
+        view-
+
+
     value_set_view 
         model-
             可以進行value更改然後update DB
         view-
             新增完成
-    
+
     emp-history
         員工歷史紀錄查詢可以選擇各employee來特別顯示從登陸薪資至今的紀錄以及圖表顯示
         model-
@@ -542,12 +560,11 @@ main-list ->
     #進行更改自動計算項 (更新成隨改隨算event 取代試算event)
     #create/update button event合併更新與新增事件
     #當月close account 處理，解決salary_checked邏輯問題(變為可依按照年月份更動)
+    #select-date event(combobox) -> 可選擇跳至任何已記錄年月份薪資
+    #對應年月的顯示薪水event
 
-
-preview_clicked 預覽成word技術 + 應用
-select-date event(combobox) -> 可選擇跳至任何已記錄年月份薪資
-
-
+preview_clicked 預覽成word技術 + 應用 (預想刪除預覽並變成綜合產生報表會在當月結算時匯出)(但畫面還是要刻for薪資條用)
+把畫面refresh event彙整到同一function
 
 subclass-list ->
 --------------------------
@@ -558,6 +575,12 @@ subclass-list ->
 員工歷史資料
 (手動viersion完成)
 
+未提供需求:
+    年資自動計算問題
+
+自動版需跟打卡機打卡行為模式一樣才能進行驗算
+
+future feat -> import export database or cloud
 
 
 ----------------------資料庫    

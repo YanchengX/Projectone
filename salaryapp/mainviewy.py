@@ -1106,14 +1106,13 @@ class MainView(QtWidgets.QMainWindow):
         self.total_salary.setText(auto_data['total'])
 
 
-    #當月結算
+    '''當月結算'''
     def close_account(self):
         self.model.closeAccount.connect(self.change)
         self.controller.close_account()
         self.model.closeAccount.disconnect(self.change)
     def change(self,s):
         #讓combobox處在latest月
-
         print(s)
 
     '''combox_event'''
@@ -1125,12 +1124,27 @@ class MainView(QtWidgets.QMainWindow):
         self.comboBox.addItems(alldate)
 
 
+    '''date select event'''
     def selectdate(self):
         self.model.dateselectsignal.connect(self.dateback)
         self.controller.selectdate(self.comboBox.currentText())
         self.model.dateselectsignal.disconnect(self.dateback)
     def dateback(self, ym):
-        print('dateback')
+        #refresh year, month ,listview, sumtotal, information(更月提示)
+        self.show_undoview()
+        self.sumtotal()
+        self.year.setText(ym[0])
+        self.month.setText(ym[1])
+        self.islatest()
+        #刻意等待時間
+
+    '''是否為最後登記月'''
+    def islatest(self):
+        self.model.latesignal.connect(self.closelimit)
+        self.controller.islatest(self.year, self.month)
+        self.model.latesignal.disconnect(self.closelimit)
+    def closelimit(self, bool):
+        self.pushButton_7.setEnabled(bool)
 
 
 #-----------------------------------------------------
@@ -1139,7 +1153,7 @@ class MainView(QtWidgets.QMainWindow):
     def newemp(self):
         self.new_emp_window = New_emp()
         self.new_emp_window.show()
-    
+        self.new_emp_window.newemp.clicked.connect(self.new_emp_e) 
     def delemp(self):
         pass
     
@@ -1149,26 +1163,49 @@ class MainView(QtWidgets.QMainWindow):
     def data_his(self):
         pass
 
+#-----------------------------------------------------
+#sub-view event
+
+    def new_emp_e(self):
+        self.model.newemp.connect(self.refreshview)
+        dic = {
+            'eid' : self.new_emp_window.e1.text(),
+            'eproperty' : self.new_emp_window.e2.text(),
+            'ename' : self.new_emp_window.e3.text(),
+            'date' : self.new_emp_window.e4.text()
+        }
+        self.controller.new_emp(dic)
+        self.model.newemp.disconnect(self.refreshview)
+
+    def refreshview(self,id):
+        print(id)
+        self.show_undoview()        
 
     #依照該button對應event進行connect (各事件再處理與controller的互動，這邊只是連接畫面跟事件觸及)
     def attachcontroller(self):
         #listview activate
         self.undoview.clicked.connect(self.undoview_clicked)
         self.undoview.activated.connect(self.undoview_clicked)
+        
         #infodata page
         self.pushButton.clicked.connect(self.infodata_edit_clicked)
         self.pushButton_2.clicked.connect(self.infodata_done_clicked)        
+        
         #account page
         #self.pushButton_3.clicked.connect(self.accountdata_clicked)
         self.pushButton_4.clicked.connect(self.delete_account_clicked)
         self.pushButton_5.clicked.connect(self.preview_word)
         self.pushButton_6.clicked.connect(self.create_account_clicked)
         
-        #new emp page
-        self.actionnew.triggered.connect(self.newemp)
-
         #close-account
         self.pushButton_7.clicked.connect(self.close_account)
 
         #dateselect
         self.comboBox.currentIndexChanged.connect(self.selectdate)
+
+        "-------Subclass-------"
+
+        #new emp page
+        self.actionnew.triggered.connect(self.newemp)
+
+        

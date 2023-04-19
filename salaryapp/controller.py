@@ -51,4 +51,8 @@ class MainController(QObject):
     def selectdate(self, ym):
         self.model.selectdate(ym)
 
+    def islatest(self, year, month):
+        self.model.islatest(year, month)
 
+    def new_emp(self, data):
+        self.model.new_emp(data)
