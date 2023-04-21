@@ -41,10 +41,10 @@
      </widget>
     </item>
     <item>
-     <widget class="QComboBox" name="comboBox"/>
+     <widget class="QComboBox" name="dcomboBox"/>
     </item>
     <item>
-     <widget class="QPushButton" name="newemp">
+     <widget class="QPushButton" name="delbutton">
       <property name="text">
        <string>刪除</string>
       </property>

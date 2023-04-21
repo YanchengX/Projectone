@@ -16,16 +16,19 @@ class Model(QStringListModel):
     auto_count_value = pyqtSignal(dict)     #自動計算
     closeAccount = pyqtSignal(str)          #單月結算
     comboevent = pyqtSignal(list)           #combox信號
+    defcom = pyqtSignal(list)               #combox預設年月
     dateselectsignal = pyqtSignal(list)     #選擇combox date
     latesignal = pyqtSignal(bool)           #最後單月判斷
     
     #subclass
 
     newemp = pyqtSignal(str)                #新增員工
+    initdel = pyqtSignal(list)             #初始化combobox刪除員工
     delemp = pyqtSignal(str)                #刪除員工
-    valuesetting = pyqtSignal(str)          #新增員工
-    emphis = pyqtSignal(str)                #新增員工
-    comhis = pyqtSignal(str)                #新增員工
+    initset = pyqtSignal(tuple)             #設定顯示初始化
+    valuesetting = pyqtSignal(str)          #參數設定完成
+    emphis = pyqtSignal(str)                #員工歷史
+    comhis = pyqtSignal(str)                #公司歷史
 
 
     def __init__(self):
@@ -37,27 +40,28 @@ class Model(QStringListModel):
         
         #account 變數用sumdata包含在內        
         self.d = None
-        
         self.caseid = 0
+
         #year,month
         self.year = None
         self.month = None
-        self.date_event()
 
-        
         #normal_value參數
-        self.workerfee_rate = 0.115 * 0.2
-        self.healthfee_rate = 0.0517 * 0.3
-        self.openbouns_value = 50
-        self.allrbouns_value = 1000
-        self.responsiblebouns_value = 1000
-        self.meal_value = 60
-        self.overtime1 = 1/8/30*1.34
-        self.overtime2 = 1/8/30*1.67
+        s = self.cursor.execute('SELECT * FROM setvalue')
+        setvalue = s.fetchone()
+        self.workerfee_rate = setvalue[0]
+        self.healthfee_rate = setvalue[1]
+        self.openbouns_value = setvalue[2]
+        self.allrbouns_value = setvalue[3]
+        self.responsiblebouns_value = setvalue[4]
+        self.meal_value = setvalue[5]
+        self.overtime1 = setvalue[6]
+        self.overtime2 = setvalue[7]
 
 
-    '''listview show'''
+
     def show_undoview(self):
+        '''listview show'''
         self.strdata = []
         # join basicinfo and total.salary and salarychecked -> eid year month is must unique
         self.viewdata = self.cursor.execute("SELECT basicinfo.eid, basicinfo.eproperty, basicinfo.ename, checks.year, checks.month, checks.salary_checked, eventdata.total_salary FROM basicinfo LEFT JOIN checks ON basicinfo.eid = checks.eid LEFT JOIN eventdata ON basicinfo.eid = eventdata.eid AND checks.year = eventdata.year AND checks.month = eventdata.month WHERE checks.year = :year AND checks.month = :month",{
@@ -175,9 +179,10 @@ class Model(QStringListModel):
         self.click_emp.emit(self.data)
 
 
-    '''button guide in select date when salarychecked is 0 or 1
-        #to be contiune to solve'''
+
     def account_guide_checked(self, index):
+        '''button guide in select date when salarychecked is 0 or 1
+        to be contiune to solve'''
         check = self.cursor.execute('SELECT checks.eid, checks.salary_checked FROM checks WHERE eid = :eid AND year = :year AND month = :month',{
             'eid' : self.infodata[index][0],
             'year' : self.year,
@@ -210,9 +215,9 @@ class Model(QStringListModel):
         self.info_done_click.emit(listinfodata[0])
 
 
-    '''新增/更新event
-        #update salary checked完成'''
     def create_account_clicked(self, dictdata):
+        '''新增/更新event
+        #update salary checked完成'''
         #find all event
         self.tmp = self.cursor.execute("SELECT eventdata.caseid, eventdata.eid, eventdata.year, eventdata.month FROM eventdata WHERE 1")
         self.eventdata = self.tmp.fetchall()
@@ -331,8 +336,9 @@ class Model(QStringListModel):
             self.create_click.emit(dictdata['eid'])
         self.conn.commit()
 
-    '''刪除event'''
+    
     def delete_account_clicked(self,dictdata):
+        '''刪除event'''
         try:
             #delete -> event, normal, overtime, checks
             self.cursor.execute("UPDATE checks SET salary_checked = 0 WHERE eid = :eid AND year = :year AND month = :month",
@@ -364,8 +370,9 @@ class Model(QStringListModel):
         except ValueError as e:
             print(e)
 
-    '''總額計算'''
+    
     def sumtotal(self):
+        '''總額計算'''
         self.totalpay = 0
         self.total =  self.cursor.execute("SELECT total_salary FROM eventdata WHERE year = :year and month = :month"
         ,{
@@ -377,7 +384,6 @@ class Model(QStringListModel):
             self.totalpay += int(item[0])
         self.salary = format(self.totalpay,',')
         self.sumtotalsignal.emit(self.salary)
-
 
     def preview(self, eid):
         self.emp = self.cursor.execute("SELECT * FROM basicinfo LEFT JOIN eventdata ON basicinfo.eid = eventdata.eid LEFT JOIN normal ON basicinfo.eid = normal.eid LEFT JOIN overtime ON basicinfo.eid = overtime.eid WHERE eventdata.year = :year AND eventdata.month = :month AND basicinfo.eid =:eid",
@@ -393,8 +399,9 @@ class Model(QStringListModel):
     def get_date(self):
         self.date_signal.emit([self.year, self.month])
 
-    #-------autoItem
+    
     def autocount(self, sum_data):
+        '''自動計算項'''
         self.d = sum_data
         #auto
         self.d['allrbouns'] = self.allrbouns_value if self.d['dayoff'] == 0 else 0
@@ -439,8 +446,9 @@ class Model(QStringListModel):
         }
         self.auto_count_value.emit(autodata)
 
-    '''當月結算事件 當現在指向為lastest date才能進行event'''
+    
     def close_account(self):
+        '''當月結算事件 當現在指向為lastest date才能進行event'''
         #日期進程
         if int(self.month) + 1 > 12:
             self.year = str(int(self.year) + 1)
@@ -470,11 +478,10 @@ class Model(QStringListModel):
             })
         self.conn.commit()
         self.closeAccount.emit('更新紀錄日期為 {} 年 {} 月'.format(self.year, self.month))
-        self.comboshow()
 
-
-    '''combobox日期顯示additems事件 要改成date查詢已紀錄事宜'''
+    
     def comboshow(self):
+        '''combobox日期顯示additems事件 要改成date查詢已紀錄事宜'''
         date = self.cursor.execute('SELECT date.year, date.month FROM date')
         listdate = []
         #set listdate and tostring
@@ -488,8 +495,8 @@ class Model(QStringListModel):
         self.comboevent.emit(listdate)
 
     
-    '''combobox選擇日期event'''
     def selectdate(self, ym):
+        '''combobox選擇日期event'''
         # 偵測該date
         if ym != '':
             sel = ym.split('-')
@@ -498,8 +505,9 @@ class Model(QStringListModel):
         
     
 
-    '''當月結算防呆'''
+
     def islatest(self, year, month):
+        '''當月結算防呆'''
         late = self.cursor.execute('SELECT * FROM date')
         a = late.fetchall()     #id,y,m
         boo =  True if year.text() == a[-1][1] and month.text() == a[-1][2] else False
@@ -507,12 +515,13 @@ class Model(QStringListModel):
 
 
 
-    '''初始化程式date指向的event'''
+    
     def date_event(self):
+        '''初始化程式date指向的event'''
         isnull = self.cursor.execute("SELECT * FROM date")
         a = isnull.fetchall()
         if a == []:
-            #default
+            #default 之後可以手動輸入
             self.cursor.execute('INSERT INTO date VALUES(:dateid, :year, :month)',{
                 'dateid': 0,
                 'year':'2022',
@@ -523,16 +532,19 @@ class Model(QStringListModel):
             self.year = item[0]
             self.month = item[1]
             self.conn.commit()
+            self.defcom.emit([self.year,self.month])
         else:
             #latest (dateid year month)
             self.year = a[-1][1]
             self.month = a[-1][2]
+            self.defcom.emit([self.year,self.month])
 
 #####################################################################################
 #Sub class
     
-    '''新增員工 db-> basicinfo, checks'''
+    
     def new_emp(self, data):
+        '''新增員工 db-> basicinfo, checks'''
         #id property name seniority dayoffspectial basic-salary
         try:
             ymd = data['date'].split('/')
@@ -545,11 +557,42 @@ class Model(QStringListModel):
         except:
             print('輸入錯誤')
 
-    # def del_emp(self):
 
+    def delshow(self):
+        a = self.cursor.execute('SELECT eid FROM basicinfo')
+        allid = []
+        for i in a.fetchall():
+            allid.append(i[0])
+        self.initdel.emit(allid)
+    def del_emp_e(self, index):
+        self.cursor.execute("DELETE FROM basicinfo WHERE eid = '{}'".format(index))
+        self.cursor.execute("DELETE FROM eventdata WHERE eid = '{}'".format(index))
+        self.cursor.execute("DELETE FROM checks WHERE eid = '{}'".format(index))
+        self.cursor.execute("DELETE FROM normal WHERE eid = '{}'".format(index))
+        self.cursor.execute("DELETE FROM overtime WHERE eid = '{}'".format(index))
+        self.conn.commit()
+        self.delemp.emit('')
     
-    # def value_set(self):
 
+    def showset(self):
+        a = self.cursor.execute('SELECT * FROM setvalue')
+        self.initset.emit(a.fetchone())
+    def setvalues_e(self, data):
+        try:
+            self.cursor.execute('UPDATE setvalue SET workerfee_rate=:wf, healthfee_rate=:hf, openbouns_value=:ob, allrbouns_value=:ab, responsiblebouns_value=:rb, meal_value=:m, overtime1=:o1, overtime2=:o2',{
+                'wf': float(data['workerfee']),
+                'hf': float(data['healthfee']),
+                'ob': int(data['openb']),
+                'ab': int(data['allb']),
+                'rb': int(data['respb']),
+                'm': int(data['meal']),
+                'o1': float(data['over1']),
+                'o2': float(data['over2']),
+            })
+            self.conn.commit()
+            self.valuesetting.emit('')
+        except Exception as e:
+            print('數值錯誤')
 
     # def emp_history(self):
 

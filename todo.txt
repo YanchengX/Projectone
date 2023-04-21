@@ -480,19 +480,27 @@ mainviewy事件處理:
     #islatest_event:
         判斷是否為最後一個登記date才能able當月結算button
 
+    #defaultdate:
+        開始程式時將combobox設定在最新一個月且放在comboboxshow後面做動才可完成
+
 
 develop-log
 ------
     bug -> 初始日期無法透過更改初始，必須都得從2022/10開始(可用用戶初始設定insertbox 或使用者設定自行解決)
-    issue ->輸入數字之防呆(try except...)    
-    #bug -> 多月計算show_view有問題
+    issue ->輸入數字之防呆(try except...)  
+    bug   ->首次clicked listiview介面自動運算沒有更動
+    issue ->員工中途加入薪資問題。(採全手動輸入)(系統為半自動)
+    issue ->新增員工後undo view cicked問題 但程式重開沒問題
+    issue ->確保該月員工都還沒更新薪水且才能使用參數更改否則會有不同薪資推敲，除非刻意為之
+    issue ->刪除員工後資料留存方式怎搞
+    issue ->https://www.wongwonggoods.com/all-posts/python/pyqt5/pyqt5-22-setwindowflags/ 只顯示關閉視窗不給放大縮小
+    issue -> delete 除了basicinfo外也都要刪除
 
+    #bug -> 多月計算show_view有問題
     #bug -> 如果要可行回朔，回到該月份判斷之時 salarychecked已被close event更新成未登錄，導致回朔前月份之際會無法顯示
             -> DB進行調整強化，或是找其他輸入點進行回朔判斷。
     #issue -> 年份月份應該記載到資料庫否則程式預設值無法比照上一次開啟選擇之月份，然後更改combobox預設最近一次更新date
 
-    issue ->中途加入薪資問題。(採全手動輸入)(系統為半自動)
-    issue ->新增員工後undo view cicked問題 但程式重開沒問題
 
 4/16
     insert year and month in database
@@ -508,34 +516,44 @@ develop-log
     sumtotal隨combobox問題
 4/19
     New_emp事件
+    setvalue事件and import to model
+    del_emp事件
+    self.__doc__ '''語法套用30%
+    解決顯示最新月combobox問題
+4/20
+    next->解決issue等等問題，設計自動版
 
 
-next todo
 ------
 
 
 subclass-
 
-    new_emp_view    
+    #new_emp_view    
         model-
             try 新增員工輸入資料，假設重複or亂輸入就err，insert data in DB
             DB -> basicinfo, checks(並用入職年月來insert)
         view-
             input 資料，and information show 完成
     
-    delete_emp_view
+    #delete_emp_view
         已登錄資料如果要刪除員工但必須繼續過往留下資料，可匯出資料(報表and db)並刪除該data以便以後可能匯入查看資料
         model-
-            
+            combobox選擇員工select -> basicinfo, delete -> basicinfo
+            匯出報表excel and db資料?
         view-
+            combobox選擇員工回傳，messagebox再顯示確認刪除，完成
 
-
-    value_set_view 
+    #value_set_view 
+        設定參數event
         model-
-            可以進行value更改然後update DB
+            可以進行value更改然後update -> setvalue 但要自行運算(參數公式寫在說明書上)
         view-
+            顯示setvalue linetext 並able edit > 以及(提示)
             新增完成
 
+
+    (or丟到自動板再做)
     emp-history
         員工歷史紀錄查詢可以選擇各employee來特別顯示從登陸薪資至今的紀錄以及圖表顯示
         model-
@@ -564,13 +582,21 @@ main-list ->
     #對應年月的顯示薪水event
 
 preview_clicked 預覽成word技術 + 應用 (預想刪除預覽並變成綜合產生報表會在當月結算時匯出)(但畫面還是要刻for薪資條用)
-把畫面refresh event彙整到同一function
+嘗試update把畫面refresh event彙整到同一function
+刻畫面framework or not
+
+列出問題點與選配方案()
+
+手動版(有員工中途加入狀況需要手動輸入database)
+半自動版(自動版失靈時可用)
+自動版(穩定版)
+
 
 subclass-list ->
 --------------------------
     #子畫面view呼叫triggered -> menubar
 新增刪除員工view完成 ->new_emp_clicked新增刪除員工in DB
-設定-參數設定窗value_set_view   -> done_clicked 
+    #設定-參數設定窗value_set_view   -> done_clicked 
 資料庫-總歷史資料show 
 員工歷史資料
 (手動viersion完成)
@@ -666,6 +692,15 @@ key編號
 全勤1000，
 責任1000
 
+        self.workerfee_rate = 0.115 * 0.2
+        self.healthfee_rate = 0.0517 * 0.3
+        self.openbouns_value = 50
+        self.allrbouns_value = 1000
+        self.responsiblebouns_value = 1000
+        self.meal_value = 60
+        self.overtime1 = 1/8/30*1.34
+        self.overtime2 = 1/8/30*1.67
+
 
 normalmeals
 openbouns
@@ -698,6 +733,4 @@ total_salary
 
 
 
-已知bug整理:
-    首次click listiview介面自動運算沒有更動
 

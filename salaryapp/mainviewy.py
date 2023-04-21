@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from new_empy import New_emp
-
+from del_emp import Del_emp
+from setvalues import Setvalues
 class MainView(QtWidgets.QMainWindow):
     def __init__(self, model, controller):
         super().__init__()
@@ -15,6 +16,7 @@ class MainView(QtWidgets.QMainWindow):
         self.sumtotal()
         self.auto_counting_event()
         self.comboshow()
+        self.defaultcombox()
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -857,8 +859,9 @@ class MainView(QtWidgets.QMainWindow):
         self.account_disable()
 
 
-    '''一般資訊完成click'''
+    
     def infodata_done_clicked(self):
+        '''一般資訊完成click'''
         try:
             self.model.info_done_click.connect(self.update_infodata)
             self.tmp = [
@@ -1106,26 +1109,38 @@ class MainView(QtWidgets.QMainWindow):
         self.total_salary.setText(auto_data['total'])
 
 
-    '''當月結算'''
+    
     def close_account(self):
+        '''當月結算'''
         self.model.closeAccount.connect(self.change)
         self.controller.close_account()
         self.model.closeAccount.disconnect(self.change)
     def change(self,s):
-        #讓combobox處在latest月
-        print(s)
+        #讓combobox處在latest月and refresh combobox
+        self.comboshow()
+        self.defaultcombox()
 
-    '''combox_event'''
+    
     def comboshow(self):
+        '''日期combobox_event'''
         self.model.comboevent.connect(self.showdate)
         self.controller.comboshow()
+        self.model.comboevent.disconnect(self.showdate)
     def showdate(self, alldate):
         self.comboBox.clear()
         self.comboBox.addItems(alldate)
 
 
-    '''date select event'''
+    def defaultcombox(self):
+        self.model.defcom.connect(self.d_com_show)
+        self.controller.dcs()
+        self.model.defcom.disconnect(self.d_com_show)
+    def d_com_show(self, date):
+        self.comboBox.setCurrentText(str(date[0] + '-' + date[1]))
+        print(str(date[0] + '-' + date[1]))
+    
     def selectdate(self):
+        '''date select event'''
         self.model.dateselectsignal.connect(self.dateback)
         self.controller.selectdate(self.comboBox.currentText())
         self.model.dateselectsignal.disconnect(self.dateback)
@@ -1136,10 +1151,10 @@ class MainView(QtWidgets.QMainWindow):
         self.year.setText(ym[0])
         self.month.setText(ym[1])
         self.islatest()
-        #刻意等待時間
+        #+刻意等待時間
 
-    '''是否為最後登記月'''
     def islatest(self):
+        '''是否為最後登記月'''
         self.model.latesignal.connect(self.closelimit)
         self.controller.islatest(self.year, self.month)
         self.model.latesignal.disconnect(self.closelimit)
@@ -1148,17 +1163,47 @@ class MainView(QtWidgets.QMainWindow):
 
 
 #-----------------------------------------------------
-#sub view
+#sub view init
     
     def newemp(self):
         self.new_emp_window = New_emp()
         self.new_emp_window.show()
         self.new_emp_window.newemp.clicked.connect(self.new_emp_e) 
+
+
     def delemp(self):
-        pass
-    
+        self.del_emp_window = Del_emp()
+        self.del_emp_window.show()
+        self.del_emp_window.delbutton.clicked.connect(self.del_emp_e) 
+
+        self.model.initdel.connect(self.del_init)
+        self.controller.delshow()
+        self.model.initdel.disconnect(self.del_init)
+    def del_init(self, iddata):
+        '''combobox init顯示'''
+        self.del_emp_window.dcomboBox.addItems(iddata)
+        
+
     def valueset(self):
-        pass
+        '''參數設定窗顯示以及預設原始資料from DB-> setvalues'''
+        self.svs_window = Setvalues()
+        self.svs_window.show()
+        self.svs_window.setbutton.clicked.connect(self.setvalues_e) 
+
+        self.model.initset.connect(self.setview_init)
+        self.controller.showset()
+        self.model.initset.disconnect(self.setview_init)
+    def setview_init(self, data):
+        '''初始化資料顯示'''
+        self.svs_window.l1.setText(str(data[0]))
+        self.svs_window.l2.setText(str(data[1]))
+        self.svs_window.l3.setText(str(data[2]))
+        self.svs_window.l4.setText(str(data[3]))
+        self.svs_window.l5.setText(str(data[4]))
+        self.svs_window.l6.setText(str(data[5]))
+        self.svs_window.l7.setText(str(data[6]))
+        self.svs_window.l8.setText(str(data[7]))
+
 
     def data_his(self):
         pass
@@ -1167,7 +1212,8 @@ class MainView(QtWidgets.QMainWindow):
 #sub-view event
 
     def new_emp_e(self):
-        self.model.newemp.connect(self.refreshview)
+        '''新增員工button事件'''
+        self.model.newemp.connect(self.new_emp_refresh)
         dic = {
             'eid' : self.new_emp_window.e1.text(),
             'eproperty' : self.new_emp_window.e2.text(),
@@ -1175,11 +1221,46 @@ class MainView(QtWidgets.QMainWindow):
             'date' : self.new_emp_window.e4.text()
         }
         self.controller.new_emp(dic)
-        self.model.newemp.disconnect(self.refreshview)
+        self.model.newemp.disconnect(self.new_emp_refresh)
+    def new_emp_refresh(self):
+        self.show_undoview()   
+        self.new_emp_window.close()
+
+
+    def del_emp_e(self):
+        '''del emp combobox event'''
+        self.model.delemp.connect(self.refreshview)
+        self.controller.del_emp_e(self.del_emp_window.dcomboBox.currentText())
+        self.model.delemp.disconnect(self.refreshview)      
+    def del_emp_refresh(self):
+        self.show_undoview()   
+        self.del_emp_window.close()        
+
+
+    def setvalues_e(self):
+        '''set values button clicked event'''
+        self.model.valuesetting.connect(self.setdone)
+        dic = {
+            'workerfee':self.svs_window.l1.text(),
+            'healthfee':self.svs_window.l2.text(),
+            'openb':self.svs_window.l3.text(),
+            'allb':self.svs_window.l4.text(),
+            'respb':self.svs_window.l5.text(),
+            'meal':self.svs_window.l6.text(),
+            'over1':self.svs_window.l7.text(),
+            'over2':self.svs_window.l8.text()            
+        }
+        self.controller.setvalues_e(dic)
+        self.model.valuesetting.disconnect(self.setdone)
+    def setdone(self):
+        QtWidgets.QMessageBox.information(self, '參數設定', '設定成功')
+        self.svs_window.close()
+
 
     def refreshview(self,id):
         print(id)
         self.show_undoview()        
+
 
     #依照該button對應event進行connect (各事件再處理與controller的互動，這邊只是連接畫面跟事件觸及)
     def attachcontroller(self):
@@ -1205,7 +1286,10 @@ class MainView(QtWidgets.QMainWindow):
 
         "-------Subclass-------"
 
-        #new emp page
+        #emp page
         self.actionnew.triggered.connect(self.newemp)
+        self.actiondelete.triggered.connect(self.delemp)
+        #setting page
+        self.actionsetting.triggered.connect(self.valueset)
+        # history
 
-        
