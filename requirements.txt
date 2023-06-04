@@ -1,0 +1,16 @@
+certifi==2021.5.30
+chardet==4.0.0
+darkdetect==0.7.1
+idna==2.10
+Jinja2==3.0.1
+lxml==4.9.2
+MarkupSafe==2.0.1
+Pillow==8.4.0
+PyQt5==5.15.7
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.11.0
+PyQt5Designer==5.14.1
+python-docx==0.8.11
+requests==2.25.1
+typing_extensions==4.3.0
+urllib3==1.26.6
